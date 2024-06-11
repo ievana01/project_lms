@@ -106,12 +106,12 @@
             <v-list>
               <v-list-item>
                 <v-list-item-title>
-                  <li><a href="" style="color: var(--blue); font-size: 14px;">Postingan Forum </a></li>
+                  <li><a href="/forumPost" style="color: var(--blue); font-size: 14px;">Postingan Forum </a></li>
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
                 <v-list-item-title>
-                  <li><a href="" style="color: var(--blue); font-size: 14px;">Diskusi Forum</a></li>
+                  <li><a href="/diskusiForum" style="color: var(--blue); font-size: 14px;">Diskusi Forum</a></li>
                 </v-list-item-title>
               </v-list-item>
             </v-list>

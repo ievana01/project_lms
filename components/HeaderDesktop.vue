@@ -5,7 +5,7 @@
     <div class="icon ml-auto pr-2">
       <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-account" variant="outlined" to="/profile"></v-btn>
       <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-chat" variant="outlined"></v-btn>
-      <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-bell" variant="outlined"></v-btn>
+      <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-bell" variant="outlined" to="/notifikasi"></v-btn>
       <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-translate" variant="outlined"></v-btn>
     </div>
   </v-app-bar>

@@ -1,24 +1,17 @@
 <template>
-  <v-btn :variant="file.done ? 'success' : 'outlined'" @click="toggleDone(file)">
-    {{ file.done ? 'Done' : 'Mark as Done' }}
-  </v-btn>
+  <div>
+    <v-btn @click="showAlert">Tampilkan Alert</v-btn>
+  </div>
 </template>
-<script>
-export default {
-  props: {
-    pertemuan: {
-      type: Array,
-      required: true
-    },
-    file: {
-      type: Array,
-      required: true
-    }
-  },
-  methods: {
-    toggleDone(file) {
-      file.done = !file.done; // Toggle the 'done' status of the file
-    }
-  }
-};
+
+<script setup>
+const showAlert = () => {
+  const { $swal } = useNuxtApp()
+  $swal.fire({
+    title: 'Berhasil!',
+    text: 'Ini adalah contoh alert SweetAlert2',
+    icon: 'success',
+    confirmButtonText: 'OK'
+  })
+}
 </script>
