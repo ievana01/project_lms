@@ -5,24 +5,34 @@
     </div>
 
     <div class="ml-auto mr-2">
+      {{ selectedStore }}
       <v-select v-model="selected" :items="option" prepend-icon="mdi-view-grid-outline" width="190px"
-        @update:modelValue="emitOptionSelected"></v-select>
+        @update:model-value="updateView"></v-select>
     </div>
 
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, defineEmits } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
 
+const viewStore = useViewStore()
 const option = ['Kartu', 'Daftar', 'Ringkasan']
-const selected = ref<string | null>('Kartu')
+const selected = ref('Kartu')
 
-const emit = defineEmits(['option-selected'])
-
-const emitOptionSelected = (value: string) => {
-  emit('option-selected', value)
+const updateView = (val) => {
+  selected.value = val
+  viewStore.setViewMode(val)
+  localStorage.setItem('viewMode', val)
 }
+
+onMounted(() => {
+  const storedMode = localStorage.getItem('viewMode')
+  if (storedMode && option.includes(storedMode)) {
+    selected.value = storedMode 
+  }
+})
+
 </script>
 
 <style>

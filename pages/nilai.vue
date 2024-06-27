@@ -2,10 +2,10 @@
   <v-table class="ms-4 mr-4">
     <thead>
       <tr>
-        <th>Nama Kelas</th>
-        <th>NTS</th>
-        <th>NAS</th>
-        <th>NA</th>
+        <th style="font-weight: bold;">Nama Kelas</th>
+        <th style="font-weight: bold;">NTS</th>
+        <th style="font-weight: bold;">NAS</th>
+        <th style="font-weight: bold;">NA</th>
       </tr>
     </thead>
     <tbody>

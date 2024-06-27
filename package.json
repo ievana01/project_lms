@@ -10,12 +10,15 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
     "@mdi/font": "^7.4.47",
     "@nuxt/ui": "^2.16.0",
     "@nuxtjs/google-fonts": "^3.2.0",
+    "@nuxtjs/i18n": "^8.3.1",
     "@pinia/nuxt": "^0.5.1",
     "@syncfusion/ej2-vue-calendars": "^25.2.7",
     "date-fns": "^3.6.0",
+    "js-cookie": "^3.0.5",
     "nuxt": "3.11.2",
     "nuxt-viewport": "^2.1.5",
     "pinia": "^2.1.7",

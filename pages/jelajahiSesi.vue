@@ -4,8 +4,8 @@
     <v-table bordered>
       <thead>
         <tr>
-          <th class="text-left">Masuk</th>
-          <th class="text-left">Aktivitas Terakhir</th>
+          <th class="text-left" style="font-weight: bold;">Masuk</th>
+          <th class="text-left" style="font-weight: bold;">Aktivitas Terakhir</th>
         </tr>
       </thead>
       <tbody>

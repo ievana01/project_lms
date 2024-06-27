@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
 
+let token = useCookie('token')
+const { data: profile } = await useFetch('/api/profile', {
+});
+
+const profileApi = ref();
+profileApi.value = profile.value;
+
 const state = reactive({
-  namaDepan: 'Sarah',
-  namaBelakang: 'Putri',
-  email: 'sarah1235432@gmail.com',
+  namaDepan: '',
+  namaBelakang: '',
+  email: '',
   noHp: '',
   deskripsi: '',
 })
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with data
   console.log(event.data)
 }
 
@@ -30,46 +36,45 @@ const handleFileChange = (event: Event) => {
     uploadedFile.value = files[0];
   }
 };
+
+const isInputDisabled = ref(true);
+
 </script>
 
 <template>
   <h1 class="ms-4" style="color: var(--purple);">EDIT PROFIL</h1>
   <UForm :state="state" class="ms-4 mr-4 space-y-4" @submit="onSubmit">
-    <UFormGroup name="input" label="Nama depan">
-      <UInput v-model="state.namaDepan" style="border: 1px solid grey!important;"/>
+    <UFormGroup name="input" label="Nama" enabled>
+      <UInput v-model="profileApi.fullName" style="border: 1px solid grey!important;" :disabled="isInputDisabled"/>
     </UFormGroup>
 
-    <UFormGroup name="input" label="Nama belakang">
-      <UInput v-model="state.namaBelakang" style="border: 1px solid grey!important;"/>
-    </UFormGroup>
-
-    <UFormGroup name="input" label="Email">
-      <UInput v-model="state.email" style="border: 1px solid grey!important;"/>
+    <UFormGroup name="input" label="Email" enabled>
+      <UInput v-model="profileApi.email" style="border: 1px solid grey!important;" :disabled="isInputDisabled" />
     </UFormGroup>
 
     <UFormGroup name="input" label="No HP">
-      <UInput v-model="state.noHp" style="border: 1px solid grey!important;"/>
+      <UInput v-model="profileApi.phoneNumber" style="border: 1px solid grey!important;" />
     </UFormGroup>
 
     <UFormGroup name="textarea" label="Deskripsi">
-      <UTextarea v-model="state.deskripsi" style="border: 1px solid grey!important;"/>
+      <UTextarea v-model="state.deskripsi" style="border: 1px solid grey!important;" />
     </UFormGroup>
 
     <div>
-      <span>Foto pengguna</span>
+      <span style="font-size: 14px;">Foto Pengguna</span>
       <div>
-        <v-sheet rounded class="mr-2" @click="triggerFileInput" style="border: 1px solid grey;">
+        <v-sheet rounded @click="triggerFileInput" style="border: 1px solid grey;">
           <div v-if="!uploadedFile" class="text-center pt-8 pb-8">
             <v-icon size="x-large">mdi-arrow-down-bold</v-icon>
-            <p>Tarik dan taruh foto anda</p>
+            <p style="font-size: 14px;">Tarik dan taruh foto anda</p>
           </div>
           <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
         </v-sheet>
 
         <v-sheet v-if="uploadedFile" class="mt-4 mr-4" color="var(--grey)">
           <div class="ms-2 pt-2 pb-2">
-            <p>File yang diunggah:</p>
-            <p><strong>Nama File:</strong> {{ uploadedFile.name }}</p>
+            <p style="font-size: 14px;">File yang diunggah:</p>
+            <p style="font-size: 14px;"> {{ uploadedFile.name }}</p>
           </div>
         </v-sheet>
       </div>
@@ -100,5 +105,9 @@ const handleFileChange = (event: Event) => {
   transform: translateY(-50%);
   font-size: 1.5rem;
   color: #888;
+}
+
+.disable{
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 </style>

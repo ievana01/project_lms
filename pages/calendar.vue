@@ -23,9 +23,16 @@
       <v-col cols="12" md="6">
         <v-card class="pa-4" elevation="20">
           <v-card-text>
-            <v-list>
-              <h6>Tidak ada tugas/acara yang tersedia</h6>
-            </v-list>
+            <div v-for="(event, index) in dataEvent" :key="index" class="mb-3">
+              <v-list style="background-color: var(--grey);" rounded>
+                <div class="ms-2 mr-2 pt-1">
+                  <h1>{{ event.name }}</h1>
+                  <p>Tanggal: {{ formattedDate(event.date) }}</p>
+                  <p>Kategori: {{ event.category }}</p>
+                  <p v-if="event.acName">Kelas : {{ event.acName }}</p>
+                </div>
+              </v-list>
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -53,14 +60,30 @@
   </v-container>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      date: new Date(),
-    }
-  },
-}
+<script setup>
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+
+const date = ref(new Date());
+
+let token = useCookie('token');
+const { data: event } = await useFetch('/api/get-event', {
+  method: 'POST',
+  body: JSON.stringify({ profileToken: token.value })
+});
+
+const dataEvent = ref(event.value);
+console.log(dataEvent.value);
+
+const formattedDate = (dateString) => {
+  try {
+    const date = new Date(dateString);
+    return format(date, 'EEEE, d MMMM yyyy, HH:mm', { locale: id });
+  } catch (error) {
+    console.error('Invalid date:', dateString);
+    return 'Invalid date';
+  }
+};
 </script>
 
 <style>
@@ -69,6 +92,6 @@ export default {
 }
 
 .v-date-picker__title {
-  display: none!important;
+  display: none !important;
 }
 </style>

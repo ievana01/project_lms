@@ -32,8 +32,8 @@
             <v-card-text>
               <h1>Informasi Penting UTS Genap 2023-2024</h1>
               <ul class="pl-10">
-                <li>Ujian Tengah Semester (22 April 2024 - 6 May 2024)</li>
-                <li>Ujian Akhir Semester (22 April 2024 - 6 May 2024)</li>
+                <li class="font-li">Ujian Tengah Semester (22 April 2024 - 6 May 2024)</li>
+                <li class="font-li">Ujian Akhir Semester (22 April 2024 - 6 May 2024)</li>
               </ul>
             </v-card-text>
           </v-card>
@@ -111,14 +111,20 @@ watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
   max-width: 80%;
 }
 
-li {
+/* li {
   font-size: 22px;
   font-weight: normal;
-}
+} */
 
 /* .btn-login{
   background-color: #612D81 !important;
   color: #FCF4B0 !important;
   font-weight: bold !important;
+} */
+
+/* .font-li {
+    font-size: 12px;
+    font-weight: bold;  
+    list-style-type: circle!important;
 } */
 </style>

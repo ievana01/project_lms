@@ -98,7 +98,8 @@ a {
 
 .font-li {
     font-size: 12px;
-    font-weight: bold;
+    font-weight: bold;  
+    list-style-type: circle!important;
 }
 
 .list-card{
@@ -107,3 +108,18 @@ a {
     justify-content: flex-start;
 }
 
+
+/* .v-expansion-panel-header.v-expansion-panel-header--active .mdi-chevron-down {
+    display: none !important;
+  }
+  
+  .v-expansion-panel-header .mdi-chevron-right {
+    display: none !important;
+  }
+  
+  .v-expansion-panel-header.v-expansion-panel-header--active .mdi-chevron-right {
+    display: inline-block !important;
+  } */
+
+  .mdi-chevron-right::before {
+    content: "\F0142";}

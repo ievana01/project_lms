@@ -2,7 +2,7 @@
   <div>
     <v-row class="py-2">
       <v-col cols="auto" class="d-flex">
-        <v-btn class="button pa-2 mr-2 ml-2" rounded="lg"to="/kelas">Kursus</v-btn>
+        <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" to="/kelas">Kursus</v-btn>
         <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" to="/peserta">Peserta</v-btn>
         <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" to="/listpresensi">Presensi</v-btn>
       </v-col>

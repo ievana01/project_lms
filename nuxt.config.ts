@@ -16,8 +16,20 @@ export default defineNuxtConfig({
     'nuxt-viewport',
     'vite-plugin-vuetify',
     '@pinia/nuxt',
-    '@nuxt/ui'
+    '@nuxt/ui',
+    '@nuxtjs/i18n',
   ],
+  i18n: {
+    // Module Options
+    lazy: true,
+    langDir: "locales",
+    strategy: "prefix_except_default",
+    defaultLocale: "id", // Default Language
+    locales: [
+      { code: "id", iso: "id-ID", file: "id.json" },
+      { code: "en", iso: "en-US", file: "en.json" },
+    ],
+  },
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
@@ -55,6 +67,10 @@ export default defineNuxtConfig({
     Id: process.env.APP_ID,
     Secret: process.env.APP_SECRET,
     Partner: process.env.PARTNER,
-
+    S3_endpoint: process.env.S3_endpoint,
+    S3_region: process.env.S3_region,
+    S3_accessKeyId: process.env.S3_accessKeyId,
+    S3_secretAccessKey: process.env.S3_secretAccessKey,
+    S3_ember: process.env.S3_ember
   }
 })

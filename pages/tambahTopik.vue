@@ -1,34 +1,43 @@
-<script setup lang="ts">
-import type { FormError, FormSubmitEvent } from '#ui/types'
-
-const state = reactive({
-  namaTopik: '',
-  deskripsi: '',
-})
-
-async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with data
-  console.log(event.data)
-}
-</script>
-
 <template>
-  <h1 class="ms-2" style="color: var(--purple);">TAMBAH TOPIK BARU</h1>
-  <UForm :state="state" class="ms-2 mr-2 space-y-4" @submit="onSubmit">
-    <UFormGroup name="input" label="Nama Acara">
-      <UInput v-model="state.namaTopik" />
-    </UFormGroup>
-    <UFormGroup name="textarea" label="Deskripsi">
-      <UTextarea v-model="state.deskripsi" />
-    </UFormGroup>
-
-    <div class="text-center mt-16">
-      <v-btn class="button pa-2 mr-2 ml-2" rounded="xl">KIRIM KE FORUM</v-btn>
-      <v-btn class="button pa-2 mr-2 ml-2" rounded="xl">BATAL</v-btn>
+  <div>
+    <h1 class="ms-2" style="color: var(--purple);">TAMBAH TOPIK BARU</h1>
+    <div class="ms-2 mr-2">
+      <v-text-field label="Nama forum" variant="solo"></v-text-field>
+      <v-text-field label="Deskripsi" variant="solo"></v-text-field>
     </div>
-  </UForm>  
+    <div class="text-center mt-16">
+        <v-btn class="button pa-2 mr-2 ml-2"  @click="addForum">KIRIM KE FORUM</v-btn>
+        <v-btn class="button pa-2 mr-2 ml-2" color="red">BATAL</v-btn>
+      </div>
+  </div>
 </template>
+<script setup>
+const forumName = ref('');
+const deskripsi = ref('');
 
-<style>
-
-</style>
+const addForum = async () => {
+  console.log(forumName.value)
+  console.log(deskripsi.value)
+  try {
+    const response = await fetch('/api/add-forum', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: forumName.value,
+        content: deskripsi.value,
+      }),
+    });
+    console.log(response)
+    if (response.ok) {
+      const tambahForum = await response.json();
+      
+    } else {
+      console.error('Failed to save comment:', response.status);
+    }
+  } catch (error) {
+    console.error('Error saving comment:', error);
+  }
+};
+</script>

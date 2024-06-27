@@ -7,16 +7,12 @@
           <v-card-text>
             <v-list>
               <v-list-item>
+                <v-list-item-title>Nama</v-list-item-title>
+                <v-list-item-subtitle>{{ profileApi.fullName }}</v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item>
                 <v-list-item-title>Alamat email</v-list-item-title>
-                <v-list-item-subtitle>{{ user[0].email }}</v-list-item-subtitle>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title>Provinsi</v-list-item-title>
-                <v-list-item-subtitle>Jawa Timur</v-list-item-subtitle>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title>Negara</v-list-item-title>
-                <v-list-item-subtitle>Indonesia</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ profileApi.email }}</v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -30,28 +26,11 @@
         <v-card class="pa-4" elevation="20">
           <v-card-title class="bold">Detail Kursus</v-card-title>
           <v-card-text>
-            <v-list>
-              <v-list-item>
-                <v-list-item-title>
-                  <li><a href="" style="color: var(--blue);font-size: 14px;">Bahasa Indonesia</a></li>
-                </v-list-item-title>
+            <div v-if="dataCourse && dataCourse.length">
+              <v-list-item v-for="(course, index) in dataCourse" :key="index" link :to="`/kelas/${course.acId}`">
+                <li class="font-li">{{ course.courseName }}</li>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-title>
-                  <li><a href="" style="color: var(--blue);font-size: 14px;">Bahasa Inggris</a></li>
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title>
-                  <li><a href="" style="color: var(--blue);font-size: 14px;">Kelas 3</a></li>
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title>
-                  <li><a href="" style="color: var(--blue);font-size: 14px;">Kelas 4</a></li>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -78,7 +57,7 @@
       </v-col>
       <v-col cols="12" md="6">
         <v-card class="pa-4" elevation="20">
-          <v-card-title class="bold">Aktivitas masuk</v-card-title>
+          <v-card-title class="bold">Aktivitas Masuk</v-card-title>
           <v-card-text>
             <v-list>
               <v-list-item>
@@ -141,15 +120,31 @@
 </template>
 
 <script setup>
-const user = [
-  {
-    nama: 'Sarah',
-    nrp: '1236895',
-    email: 'sarah1234@gmail.com',
-    noHp: '',
-    foto: '',
-  }
-]
+// const user = [
+//   {
+//     nama: 'Sarah',
+//     nrp: '1236895',
+//     email: 'sarah1234@gmail.com',
+//     noHp: '',
+//     foto: '',
+//   }
+// ]
+let token = useCookie('token')
+const { data: profile } = await useFetch('/api/profile', {
+  method: 'POST',
+  body: JSON.stringify({ profileToken: token.value })
+});
+
+const profileApi = ref();
+profileApi.value = profile.value;
+
+const { data: course } = await useFetch('/api/course', {
+  method: 'POST',
+  body: JSON.stringify({ profileToken: token.value })
+});
+
+const dataCourse = ref();
+dataCourse.value = course.value;
 </script>
 
 <style>

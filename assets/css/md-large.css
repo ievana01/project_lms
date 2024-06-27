@@ -4,6 +4,14 @@
         font-size: 24px;
     }
 
+    .nama{
+        font-size: 24px;
+    }
+
+    .nrp{
+        font-size: 22px;
+    }
+
     /* forgot */
     .set-card {
         width: 800px;
@@ -91,7 +99,7 @@
     }
 
     .v-main {
-        padding-left: 150px !important;
+        padding-left: 180px !important;
         padding-bottom: 0 !important;
     }
 

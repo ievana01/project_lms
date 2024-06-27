@@ -5,20 +5,40 @@
   <div v-if="$viewport.isGreaterOrEquals('tablet')">
     <HeaderDesktop />
   </div>
-  <v-main>
-    <slot /> 
+  <v-main class="mt-3">
+    <slot />
     <br>
-    <Footer/>
+    <Footer />
   </v-main>
 </template>
 
 <script setup>
 import { useNuxtApp } from '#app'
-const { $viewport } = useNuxtApp()
+import { onMounted } from 'vue';
+let { $viewport } = useNuxtApp()
 
 watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
   console.log('Breakpoint updated:', oldBreakpoint, '->', newBreakpoint)
 })
+
+let token = useCookie('token')
+console.log(token.value)
+
+onMounted(() => {
+  if (token.value == undefined) {
+    return navigateTo('/login')
+  }
+});
+
+const { data: profile } = await useFetch('/api/profile', {
+  method: 'POST',
+  body: JSON.stringify({ profileToken: token.value })
+});
+if (profile.value) {
+  const profileApi = ref();
+  profileApi.value = profile.value;
+console.log(profileApi.value)
+}
 
 </script>
 
