@@ -1,10 +1,10 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
+  
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/assignments/comment/${body.id}`, {
-    method: 'POST',
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/chats/get-all-student`, {
     headers: {
       'Id': runtimeConfig.Id,
       'Secret': runtimeConfig.Secret,
@@ -12,15 +12,15 @@ export default defineEventHandler(async (event) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      content: body.content,
-    }), 
   });
-
-  if (response.ok) {
-    const saveComment = await response.json();
-    return saveComment;
+  console.log('get all student', response);
+  
+  if (response.status == 200) {
+    const getStudentChat = await response.json();
+    console.log('get all student',getStudentChat);
+    
+    return getStudentChat;
   } else {
-    throw new Error('Failed to save comment');
+    throw new Error('Failed to get student chat ');
   }
 });

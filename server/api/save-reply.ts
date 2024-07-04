@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
-  console.log(body);
+
   const topicIdHeaders = getHeader(event, 'topicId');
   const commentIdHeaders = getHeader(event, 'commentId');
   const typeHeaders = getHeader(event, 'type')
@@ -15,9 +15,8 @@ export default defineEventHandler(async (event) => {
     type: typeHeaders,
   };
 
-  console.log('Request Data:', requestData);
 
-  const reply = `https://b6f9-202-148-15-210.ngrok-free.app/imavi/forums/reply?topicId=${requestData.topicId}&commentId=${requestData.commentId}`;
+  const reply = `${runtimeConfig.URL2}/imavi/forums/reply?topicId=${requestData.topicId}&commentId=${requestData.commentId}`;
   let response;
   let result;
   if (requestData.type == 'reply') {
@@ -36,10 +35,7 @@ export default defineEventHandler(async (event) => {
     });
     if(response.ok){
       const saveReply = await response.json();
-      console.log(saveReply);
       return saveReply;
     }
-    // result = await response.json();
-    // console.log('API Response:', result);
   }
 });

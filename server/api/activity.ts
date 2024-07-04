@@ -1,26 +1,23 @@
 export default defineEventHandler(async (event) => {
-  let body = await readBody(event);
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/assignments/comment/${body.id}`, {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/users/activity`, {
     method: 'POST',
     headers: {
       'Id': runtimeConfig.Id,
       'Secret': runtimeConfig.Secret,
       'Partner': runtimeConfig.Partner,
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      content: body.content,
-    }), 
   });
 
   if (response.ok) {
-    const saveComment = await response.json();
-    return saveComment;
+    const activity = await response.json();
+    console.log('activity', activity);
+    
+    return activity;
   } else {
-    throw new Error('Failed to save comment');
+    throw new Error('Failed to add activity');
   }
 });

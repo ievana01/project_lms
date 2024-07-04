@@ -9,24 +9,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Bahasa Indonesia</td>
-        <td>90</td>
-        <td>-</td>
-        <td>-</td>
+      <tr v-for="(nilai, index) in dataNilai" :key="index">
+        <td>{{ nilai.acName }}</td>
+        <td v-if="nilai.nts !== ''">{{ nilai.nts }}</td>
+        <td v-else>-</td>
+        <td>{{ nilai.nas !== '' ? nilai.nas : '-' }}</td>
+        <td>{{ nilai.na !== '' ? nilai.na : '-' }}</td>
       </tr>
-      <tr>
-        <td>Bahasa Inggris</td>
-        <td>75</td>
-        <td>-</td>
-        <td>-</td>
-      </tr>
-      <tr>
-        <td>Kelas 3</td>
-        <td>90</td>
-        <td>-</td>
-        <td>-</td>
+      <tr v-if="dataNilai.length === 0">
+        <td colspan="4" class="text-center">Tidak ada data nilai yang tersedia.</td>
       </tr>
     </tbody>
   </v-table>
 </template>
+
+<script setup>
+const token = useCookie('token');
+const { data: grade } = await useFetch('/api/get-grade', {
+  method: 'POST',
+  body: JSON.stringify({ profileToken: token.value })
+});
+const dataNilai = ref(grade.value);
+</script>

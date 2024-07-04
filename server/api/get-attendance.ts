@@ -1,10 +1,9 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event)
-  console.log('ini detail kursus', body)
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/activeCourses/get-detail/${body.id}`, {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/activeCourses/get-attendances/${body.acId}`, {
     headers: {
       'Id': runtimeConfig.Id,
       'Secret': runtimeConfig.Secret,
@@ -13,12 +12,10 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  console.log(response)
   if (response.ok) {
-    const detailCourse = await response.json();
-    console.log('ini detail kursus', detailCourse)
-    return detailCourse;
+    const getAttendance = await response.json();
+    return getAttendance;
   } else {
-    return { error: 'Unable to fetch detail course' };
+    return { error: 'Unable to get all attandence' };
   }
 });

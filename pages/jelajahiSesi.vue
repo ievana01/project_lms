@@ -10,8 +10,8 @@
       </thead>
       <tbody>
         <tr>
-          <td>Jumat, 17 Mei 2024 08.00 AM</td>
-          <td>Sesi saat ini</td>
+          <td>{{formattedDate(profileApi?.access?.firstAccess)}}</td>
+          <td>{{formattedDate(profileApi?.access?.lastAccess)}}</td>
         </tr>
       </tbody>
     </v-table>
@@ -19,8 +19,31 @@
 
 </template>
 
-<script lang="ts" setup>
+<script setup>
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
 
+let token = useCookie('token')
+const { data: profile } = await useFetch('/api/profile', {
+  method: 'POST',
+  body: JSON.stringify({ profileToken: token.value })
+});
+
+const profileApi = ref();
+profileApi.value = profile.value;
+console.log(profileApi);
+const access = profileApi.value.access;
+console.log(access);
+
+const formattedDate = (dateString) => {
+  try {
+    const date = new Date(dateString);
+    return format(date, 'EEEE, d MMMM yyyy, HH:mm', { locale: id });
+  } catch (error) {
+    console.error('Invalid date:', dateString);
+    return 'Invalid date';
+  }
+};
 </script>
 
 <style>

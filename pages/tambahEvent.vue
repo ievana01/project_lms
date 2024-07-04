@@ -2,15 +2,14 @@
   <v-form>
     <div class="ms-2 mr-2">
       <h1>TAMBAH ACARA</h1>
-      <v-text-field label="Nama Acara" variant="solo"></v-text-field>
-      <v-select label="Pilih Kategori Acara" :items="['Acara Kelas', 'Acara Pengguna']"></v-select>
-
+      <v-text-field label="Nama Acara" variant="solo" v-model="namaAcara"></v-text-field>
+      <v-select v-model="kategoriAcara" :items="['acara kelas', 'acara pengguna']" item-text="label" item-value="value" 
+        label="Pilih Kategori Acara" variant="solo"></v-select>
       <div>
-        <span style="font-size: 14px;">Pilih Tanggal</span>
         <v-sheet style="border: 1px solid grey!important;" rounded @click="openDatePicker" height="56px">
-          <div class="ms-2 pt-1 pb-1">
+          <div class="ms-2 pt-4">
             <v-icon>mdi-calendar-month</v-icon>
-            <span class="ms-2" style="font-size: 14px;">{{ selectedDate ? formatDate(selectedDate) : 'Pilih tanggal'
+            <span class="ms-2" style="font-size: 14px;">{{ selectedDate ? formatDateApi(selectedDate) : 'Pilih tanggal'
               }}</span>
           </div>
         </v-sheet>
@@ -18,34 +17,20 @@
           <v-date-picker v-model="selectedDate" locale="id"></v-date-picker>
         </v-dialog>
       </div>
-
-      <v-btn type="submit" color="primary">Submit</v-btn>
+      <div class="text-right mt-6">
+        <v-btn class="button pa-2 mr-2 ml-2" @click="addEvent">TAMBAH</v-btn>
+        <v-btn class="button pa-2 mr-2 ml-2" to="/profile" color="red">BATAL</v-btn>
+      </div>
     </div>
   </v-form>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { format } from 'date-fns';
+import { constructNow, format } from 'date-fns';
 import { id } from 'date-fns/locale';
-
-const state = ref({
-  namaAcara: '',
-  selectMenu: null,
-});
-
-const options = [
-  { label: 'Acara Kursus', value: 'Acara Kursus' },
-  { label: 'Acara Pengguna', value: 'Acara Pengguna' },
-];
 
 const selectedDate = ref(null);
 const dialog = ref(false);
-const valid = ref(false);
-
-const rules = {
-  required: value => !!value || 'Field is required',
-};
 
 const openDatePicker = () => {
   dialog.value = true;
@@ -59,10 +44,48 @@ const formatDate = (date) => {
   return format(new Date(date), 'EEEE, d MMMM yyyy', { locale: id });
 };
 
-const onSubmit = () => {
-  if (valid.value) {
-    // Handle form submission
-    console.log(state.value);
+const token = useCookie('token');
+const { data: event } = await useFetch('/api/get-event', {
+  method: 'POST',
+  body: JSON.stringify({ profileToken: token.value })
+});
+const dataEvent = ref(event.value);
+
+const namaAcara = ref('');
+const kategoriAcara = ref('');
+
+const formatDateApi = (date) => {
+  return format(new Date(date), 'MM/dd/yyyy HH:mm:ss');
+};
+
+const addEvent = async () => {
+  console.log(namaAcara.value);
+  console.log(kategoriAcara.value);
+  console.log(selectedDate.value);
+  try {
+    const response = await fetch('/api/add-event', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token.value}`
+      },
+      body: JSON.stringify({
+        name: namaAcara.value,
+        date: formatDateApi(selectedDate.value),
+        category: kategoriAcara.value,
+      })
+    });
+    if (response.ok) {
+      const tambahEvent = await response.json();
+      dataEvent.value.push(tambahEvent);
+
+      console.log('sukses tambah event')
+    } else {
+      console.error('Failed to save event:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error saving event:', error);
   }
 };
+
 </script>

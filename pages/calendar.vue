@@ -2,7 +2,7 @@
   <v-container class="ms-1">
     <v-row>
       <v-col cols="12" md="6">
-        <v-card class="pa-4" elevation="20">
+        <v-card class="pa-4" elevation="20"  style="min-height: 260px;">
           <v-card-title class="bold">Kategori</v-card-title>
           <v-card-text>
             <v-list>
@@ -46,7 +46,7 @@
           <v-container fluid class="d-flex justify-center align-center">
             <v-layout row wrap class="d-flex justify-center align-center">
               <div>
-                <v-date-picker v-model="date" color="var(--purple)">
+                <v-date-picker v-model="date" color="var(--purple)" :events="eventDates" :event-color="getEventColor">
                   <template v-slot:header>
                     <div></div>
                   </template>
@@ -83,6 +83,20 @@ const formattedDate = (dateString) => {
     console.error('Invalid date:', dateString);
     return 'Invalid date';
   }
+};
+
+// const eventDates = computed(() => {
+//   return dataEvent.value.map(event => format(new Date(event.date), 'yyyy-MM-dd'));
+// });
+// const getEventColor = (date) => {
+//   return eventDates.value.includes(format(date, 'yyyy-MM-dd')) ? 'var(--purple)' : null;
+// };
+const eventDates = computed(() => {
+  return dataEvent.value.map(event => format(new Date(event.date), 'yyyy-MM-dd'));
+});
+
+const getEventColor = (date) => {
+  return eventDates.value.includes(format(date, 'yyyy-MM-dd')) ? 'var(--purple)' : null;
 };
 </script>
 

@@ -24,8 +24,6 @@
         </v-row>
       </v-sheet>
     </div>
-
-
     <div class="ms-4 mr-4">
       <v-sheet v-for="(item, index) in detailCourse.meetings" :key="index" class="mb-4"
         :max-height="expandedPanels[index] ? 'auto' : 'auto'" elevation="2" rounded>
@@ -39,6 +37,23 @@
           </v-col>
         </v-row>
         <v-row v-if="expandedPanels[index]" class="px-4">
+          <!-- absensi -->
+          <div>
+            <div class="ms-8 mb-2" v-if="item.attendance">
+              <v-icon left class="mr-2" color="green">mdi-check-circle-outline</v-icon><span
+                style="color: black!important">{{ item.attendance.meetingName }}</span>
+            </div>
+            <div v-else>
+              <div class="ms-8 mb-2 d-flex">
+                <NuxtLink :to="`/absensi/${detailCourse._id}-${item._id}`">
+                  <v-icon left class="mr-2" color="black">mdi-check-circle-outline</v-icon><span
+                    style="color: black!important">{{ item.name }}</span>
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+
+          <!-- materi -->
           <div class="ms-4 mr-2 w-100 pb-2">
             <div v-for="(file, fIndex) in getFiles(item._id)" :key="fIndex">
               <div class="file mb-4">
@@ -51,11 +66,13 @@
                   <v-btn v-if="item2.nameMaterial == file.name"
                     :class="item2.nameMaterial == file.name ? 'btn-done' : 'btn-mark-done'"
                     @click="doneMeeting(file.name, item._id)" variant="outlined" style="font-size: 12px;">
-                    {{ item2.nameMaterial == file.name ? 'Done' : 'Mark as Done' }}
+                    {{ item2.nameMaterial == file.name ? 'Selesai' : 'Tandai telah selesai' }}
                   </v-btn>
                 </div>
               </div>
             </div>
+
+            <!-- tugas -->
             <div v-if="item.assignments.length">
               <div v-for="(assignment, aIndex) in item.assignments" :key="aIndex"
                 class="assignment-item mb-4 ms-4 mr-4">
@@ -70,15 +87,16 @@
                       :class="item3.idAssignment == assignment._id ? 'btn-done' : 'btn-mark-done'"
                       @click="doneMeetingAssignment(item._id, assignment._id)" variant="outlined"
                       style="font-size: 12px;">
-                      {{ item3.idAssignment == assignment._id ? 'Done' : 'Mark as Done' }}
+                      {{ item3.idAssignment == assignment._id ? 'Selesai' : 'Tandai telah selesai' }}
                     </v-btn>
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- kuis -->
             <div v-if="item.quizzes.length">
-              <div v-for="(kuis, qIndex) in item.quizzes" :key="qIndex"
-                class="assignment-item mb-4 ms-4 mr-4">
+              <div v-for="(kuis, qIndex) in item.quizzes" :key="qIndex" class="assignment-item mb-4 ms-4 mr-4">
                 <NuxtLink :to="`/kuis/${kuis._id}`" style="color: black;">
                   <div class="file-content mt-2">
                     <v-icon left class="mr-2">{{ getIcon('kuis') }}</v-icon> {{ kuis.name }}
@@ -88,17 +106,18 @@
                   <div v-for="(item4, index4) in item.isFinished" :key="index4">
                     <v-btn v-if="item4.quizId == kuis._id"
                       :class="item4.quizId == kuis._id ? 'btn-done' : 'btn-mark-done'"
-                      @click="doneMeetingAssignment(item._id, assignment._id)" variant="outlined"
+                      @click="doneMeetingQuiz(item._id, kuis._id)" variant="outlined"
                       style="font-size: 12px;">
-                      {{ item4.kuisId == kuis._id ? 'Done' : 'Mark as Done' }}
+                      {{ item4.kuisId == kuis._id ? 'Selesai' : 'Tandai telah selesai' }}
                     </v-btn>
                   </div>
                 </div>
               </div>
             </div>
+            
+            <!-- forum -->
             <div v-if="item.forums.length">
-              <div v-for="(forum, fIndex) in item.forums" :key="fIndex"
-                class="assignment-item mb-4 ms-4 mr-4">
+              <div v-for="(forum, fIndex) in item.forums" :key="fIndex" class="assignment-item mb-4 ms-4 mr-4">
                 <NuxtLink :to="`/forum/${forum.meetingId}-${forum._id}`" style="color: black;">
                   <div class="file-content mt-2">
                     <v-icon left class="mr-2">{{ getIcon('forum') }}</v-icon> {{ forum.name }}
@@ -115,7 +134,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRoute, useFetch, useCookie } from '#imports';
 
 let token = useCookie('token');
 const route = useRoute();
@@ -138,6 +156,16 @@ const doneMeetingAssignment = async (idPertemuan, assignmentId) => {
   console.log(assignment.value);
 };
 
+const doneMeetingQuiz = async (idPertemuan, quizId) => {
+  const { data: quiz } = await useFetch('/api/done-meeting', {
+    headers: {
+      profileToken: token.value, acId: route.params.slug, meetingId: idPertemuan, quizId: quizId, type: 'kuis',
+    },
+  });
+  console.log(quiz.value);
+};
+
+// deskripsi kelas
 const { data: descCourse } = await useFetch('/api/deskCourse', {
   method: 'POST',
   body: JSON.stringify({ profileToken: token.value, id: route.params.slug })
@@ -148,6 +176,7 @@ if (descCourse.value && descCourse.value.length > 0) {
 }
 console.log('Desc Course:', desKelas.value);
 
+//detail kelas
 const { data: course } = await useFetch('/api/get-detailCourse', {
   method: 'POST',
   body: JSON.stringify({ profileToken: token.value, id: route.params.slug })
@@ -158,14 +187,18 @@ const getFiles = (id_pertemuan) => {
   return detailCourse.value.meetings.find(meeting => meeting._id === id_pertemuan)?.links || [];
 };
 
+//ambil meetings di detail kelas
+const attendance = detailCourse.value.meetings;
+console.log(attendance);
+
 const file = [
   { icon: 'mdi-file-powerpoint', nama: 'Introduction', link: '', pertemuan: 1 },
   { icon: 'mdi-file-document', nama: 'Chapter 1', link: '', pertemuan: 1 },
   { icon: 'mdi-clipboard-text', nama: 'Tugas Pertemuan 1', link: '/tugas', pertemuan: 1, code: 'task' },
-  { icon: 'mdi-check-circle-outline', nama: 'Presensi Pertemuan 1', link: '/presensi', pertemuan: 1 },
+  { icon: 'mdi-check-circle-outline', nama: 'Presensi Pertemuan 1', link: '/presensi', pertemuan: 1, code: 'absensi' },
   { icon: 'mdi-file-document', nama: 'Setup Guide', link: '', pertemuan: 2, code: 'file' },
-  { icon: 'mdi-checkbox-marked-outline', nama: 'Kuis Pertemuan 2', link: '/kuis', pertemuan: 2, code:'kuis' },
-  { icon: 'mdi-forum', nama: 'Forum Kelas', link: '/forum', pertemuan: 3, code:'forum' },
+  { icon: 'mdi-checkbox-marked-outline', nama: 'Kuis Pertemuan 2', link: '/kuis', pertemuan: 2, code: 'kuis' },
+  { icon: 'mdi-forum', nama: 'Forum Kelas', link: '/forum', pertemuan: 3, code: 'forum' },
 ];
 
 const expandedDesKelas = ref(false);

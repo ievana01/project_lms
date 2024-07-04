@@ -66,6 +66,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     Id: process.env.APP_ID,
     Secret: process.env.APP_SECRET,
+    Id2: process.env.APP_ID2,
+    URL : process.env.APP_URL,
+    URL2 : process.env.APP_URL2 ,
+    Secret2: process.env.APP_SECRET2,
     Partner: process.env.PARTNER,
     S3_endpoint: process.env.S3_endpoint,
     S3_region: process.env.S3_region,

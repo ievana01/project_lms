@@ -14,16 +14,24 @@
                 <v-list-item-title>Alamat email</v-list-item-title>
                 <v-list-item-subtitle>{{ profileApi.email }}</v-list-item-subtitle>
               </v-list-item>
+              <v-list-item>
+                <v-list-item-title>Nomor Hp</v-list-item-title>
+                <v-list-item-subtitle>{{ profileApi.phoneNumber }}</v-list-item-subtitle>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>Deskripsi</v-list-item-title>
+                <v-list-item-subtitle>{{ profileApi.description }}</v-list-item-subtitle>
+              </v-list-item>
             </v-list>
           </v-card-text>
           <div class="text-right">
-            <NuxtLink to="/editprofil"><v-btn class="button pa-2 mr-2 ml-2" rounded="lg">EDIT PROFIL</v-btn></NuxtLink>
+            <NuxtLink to="/editprofil"><v-btn class="button pa-2 mr-2 ml-2" rounded="lg">UBAH PROFIL</v-btn></NuxtLink>
           </div>
 
         </v-card>
       </v-col>
       <v-col cols="12" md="6">
-        <v-card class="pa-4" elevation="20">
+        <v-card class="pa-4" elevation="20" style="min-height: 340px;">
           <v-card-title class="bold">Detail Kursus</v-card-title>
           <v-card-text>
             <div v-if="dataCourse && dataCourse.length">
@@ -62,11 +70,11 @@
             <v-list>
               <v-list-item>
                 <v-list-item-subtitle>Akses pertama ke situs</v-list-item-subtitle>
-                <v-list-item-subtitle>Rabu, 16 April 2024, 15.00 (3 menit)</v-list-item-subtitle>
+                <v-list-item-subtitle>{{formattedDate(profileApi?.access?.firstAccess)}}</v-list-item-subtitle>
               </v-list-item>
               <v-list-item>
                 <v-list-item-subtitle>Akses terakhir ke situs</v-list-item-subtitle>
-                <v-list-item-subtitle>Rabu, 16 April 2024, 15.45 (sekarang)</v-list-item-subtitle>
+                <v-list-item-subtitle>{{formattedDate(profileApi?.access?.lastAccess)}}</v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -120,15 +128,9 @@
 </template>
 
 <script setup>
-// const user = [
-//   {
-//     nama: 'Sarah',
-//     nrp: '1236895',
-//     email: 'sarah1234@gmail.com',
-//     noHp: '',
-//     foto: '',
-//   }
-// ]
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+
 let token = useCookie('token')
 const { data: profile } = await useFetch('/api/profile', {
   method: 'POST',
@@ -137,6 +139,9 @@ const { data: profile } = await useFetch('/api/profile', {
 
 const profileApi = ref();
 profileApi.value = profile.value;
+console.log(profileApi);
+const access = profileApi.value.access;
+console.log(access);
 
 const { data: course } = await useFetch('/api/course', {
   method: 'POST',
@@ -145,6 +150,16 @@ const { data: course } = await useFetch('/api/course', {
 
 const dataCourse = ref();
 dataCourse.value = course.value;
+
+const formattedDate = (dateString) => {
+  try {
+    const date = new Date(dateString);
+    return format(date, 'EEEE, d MMMM yyyy, HH:mm', { locale: id });
+  } catch (error) {
+    console.error('Invalid date:', dateString);
+    return 'Invalid date';
+  }
+};
 </script>
 
 <style>

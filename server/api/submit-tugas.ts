@@ -1,9 +1,11 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
+  console.log('save',body)
+  console.log(body.content)
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/assignments/comment/${body.id}`, {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/assignments/submit/${body.id}`, {
     method: 'POST',
     headers: {
       'Id': runtimeConfig.Id,
@@ -13,13 +15,16 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify({
-      content: body.content,
+      acName: body.acName,
+      acId: body.acId,
+      meetingId: body.meetingId,
+      link: body.link,
     }), 
   });
 
   if (response.ok) {
-    const saveComment = await response.json();
-    return saveComment;
+    const submitTugas = await response.json();
+    return submitTugas;
   } else {
     throw new Error('Failed to save comment');
   }

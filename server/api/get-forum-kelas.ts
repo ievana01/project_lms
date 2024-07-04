@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`https://b6f9-202-148-15-210.ngrok-free.app/imavi/forums/get-by-meeting/${body.id}`, {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/forums/get-by-meeting/${body.id}`, {
     headers: {
       'Id': runtimeConfig.Id,
       'Secret': runtimeConfig.Secret,

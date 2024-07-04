@@ -8,7 +8,7 @@
         <v-card-title class="justify-center">
           <v-text-field label="Username" variant="solo" v-model="username"></v-text-field>
           <v-text-field label="Password" variant="solo" v-model="password" type="password"></v-text-field>
-          <v-btn class="btn-login label-login" @click="login">LOGIN</v-btn>
+          <v-btn class="btn-login label-login" @click="login" >LOGIN</v-btn>
           <div class="text-center pt-2">
             <h5><a href="/forgot" style="color: var(--blue);">Lupa username/password?</a></h5>
           </div>
@@ -46,6 +46,7 @@ const login = async () => {
         icon: 'success',
         confirmButtonText: 'OK'
       }).then(() => {
+        activity()
         router.push('/dasbor')
       })
       console.log(data.value);
@@ -67,6 +68,16 @@ const login = async () => {
       })
   }
 }
+
+const activity = async() => {
+    const response = await fetch('/api/activity', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token.value}`
+        },
+    });
+    console.log(response.status);
+};
 </script>
 
 <style>

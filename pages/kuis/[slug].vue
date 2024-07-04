@@ -5,15 +5,29 @@
         <p>Dibuka : {{ formattedDate(detailKuis.startDate) }}</p>
         <p>Ditutup : {{ formattedDate(detailKuis.endDate) }}</p>
     </div>
-
     <v-sheet style="background-color: var(--grey);" rounded class="ms-4 mr-4 pt-2 pb-1">
-        <p class="pl-2 pr-2">{{ detailKuis.description }}
-        </p>
+        <p class="pl-2 pr-2">{{ detailKuis.description }}</p>
     </v-sheet>
-    <div class="text-center mt-16 mb-8">
-        <p>Waktu pengerjaan {{ detailKuis.duration }} menit</p>
-        <v-btn class="button pa-2 mr-2 ml-2" :to="`/kuis/kerjaKuis/${detailKuis._id}`" rounded="lg">Kerjakan Kuis</v-btn>
+
+    <div v-if="detailKuis.isFinished">
+        <v-sheet style="background-color: var(--grey)" rounded class="ms-4 mr-4 mt-4">
+            <div class="ms-2 mr-2 pt-2 pb-2">
+                <h6>Status Pengerjaan Kuis</h6>
+                <p>Status Pengerjaan : Selesai</p>
+                <p v-if="detailKuis.score"> Nilai : {{ detailKuis.score }}</p>
+                <p v-else>Nilai : -</p>
+            </div>
+        </v-sheet>
     </div>
+
+    <div v-else>
+        <div class="text-center mt-16 mb-8">
+             <p>Waktu pengerjaan {{ detailKuis.duration }} menit</p>
+            <!-- agreement -->
+            <v-btn class="button pa-2 mr-2 ml-2" @click="startQuiz" rounded="lg">Kerjakan Kuis</v-btn>
+        </div>
+    </div>
+
 </template>
 
 <script setup>
@@ -37,7 +51,35 @@ const { data: kuis } = await useFetch('/api/detailQuiz', {
 });
 const detailKuis = ref();
 detailKuis.value = kuis.value;
+console.log(detailKuis);
 
+const router = useRouter();
+const startQuiz = async () => {
+    const response = await fetch('/api/start-quiz', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.value}`
+        },
+        body: JSON.stringify({
+            id: useRoute().params.slug,
+        })
+    });
+    console.log(response);
+    if (response.status == 200) {
+        const data = await response.json();
+        console.log('start kuis',data.value);
+        router.push({
+            path: `/kuis/kerjaKuis/${useRoute().params.slug}`,
+            query: {
+                startTime: data.startTime,
+                endTime: data.endTime
+            }
+        });
+    } else {
+        console.log(response);
+    }
+};
 </script>
 
 <style></style>

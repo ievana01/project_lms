@@ -60,7 +60,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 let token = useCookie('token');
 const { data: forum } = await useFetch('/api/get-detail-forum', {
     method: 'POST',

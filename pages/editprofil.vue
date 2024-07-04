@@ -1,91 +1,65 @@
-<script setup lang="ts">
-import type { FormError, FormSubmitEvent } from '#ui/types'
-
-let token = useCookie('token')
-const { data: profile } = await useFetch('/api/profile', {
-});
-
-const profileApi = ref();
-profileApi.value = profile.value;
-
-const state = reactive({
-  namaDepan: '',
-  namaBelakang: '',
-  email: '',
-  noHp: '',
-  deskripsi: '',
-})
-
-async function onSubmit(event: FormSubmitEvent<any>) {
-  console.log(event.data)
-}
-
-const uploadedFile: Ref<File | null> = ref(null);
-const fileInput: Ref<HTMLInputElement | null> = ref(null);
-
-const triggerFileInput = () => {
-  if (fileInput.value) {
-    fileInput.value.click();
-  }
-};
-
-const handleFileChange = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  const files = input.files;
-  if (files && files.length > 0) {
-    uploadedFile.value = files[0];
-  }
-};
-
-const isInputDisabled = ref(true);
-
-</script>
-
 <template>
-  <h1 class="ms-4" style="color: var(--purple);">EDIT PROFIL</h1>
-  <UForm :state="state" class="ms-4 mr-4 space-y-4" @submit="onSubmit">
-    <UFormGroup name="input" label="Nama" enabled>
-      <UInput v-model="profileApi.fullName" style="border: 1px solid grey!important;" :disabled="isInputDisabled"/>
-    </UFormGroup>
+  <v-form>
+    <div class="ms-2 mr-2">
+      <h1 style="color: var(--purple);">EDIT PROFIL</h1>
+      <v-text-field label="Nama" v-model="profileApi.fullName" variant="solo" readonly></v-text-field>
+      <v-text-field label="Email" v-model="profileApi.email" variant="solo" readonly></v-text-field>
 
-    <UFormGroup name="input" label="Email" enabled>
-      <UInput v-model="profileApi.email" style="border: 1px solid grey!important;" :disabled="isInputDisabled" />
-    </UFormGroup>
+      <v-text-field label="Ubah Password" variant="solo" v-model="newPassword" type="password"></v-text-field>
 
-    <UFormGroup name="input" label="No HP">
-      <UInput v-model="profileApi.phoneNumber" style="border: 1px solid grey!important;" />
-    </UFormGroup>
+      <v-text-field label="Nomor HP" variant="solo" v-model="profileApi.phoneNumber"></v-text-field>
 
-    <UFormGroup name="textarea" label="Deskripsi">
-      <UTextarea v-model="state.deskripsi" style="border: 1px solid grey!important;" />
-    </UFormGroup>
+      <v-textarea label="Deskripsi" v-model="profileApi.description" variant="solo"></v-textarea>
 
-    <div>
-      <span style="font-size: 14px;">Foto Pengguna</span>
-      <div>
-        <v-sheet rounded @click="triggerFileInput" style="border: 1px solid grey;">
-          <div v-if="!uploadedFile" class="text-center pt-8 pb-8">
-            <v-icon size="x-large">mdi-arrow-down-bold</v-icon>
-            <p style="font-size: 14px;">Tarik dan taruh foto anda</p>
-          </div>
-          <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
-        </v-sheet>
-
-        <v-sheet v-if="uploadedFile" class="mt-4 mr-4" color="var(--grey)">
-          <div class="ms-2 pt-2 pb-2">
-            <p style="font-size: 14px;">File yang diunggah:</p>
-            <p style="font-size: 14px;"> {{ uploadedFile.name }}</p>
-          </div>
-        </v-sheet>
-      </div>
     </div>
-
-    <div class="text-right mt-2">
-      <v-btn class="button pa-2 mr-2 ml-2">UBAH PROFIL</v-btn>
-      <v-btn class="button pa-2 mr-2 ml-2" to="/profile">BATAL</v-btn>
-    </div>
-  </UForm>
+  </v-form>
+  <div class="text-right mt-2">
+    <v-btn class="button pa-2 mr-2 ml-2" @click="updateProfile">UBAH PROFIL</v-btn>
+    <v-btn class="button pa-2 mr-2 ml-2" to="/profile" color="red">BATAL</v-btn>
+  </div>
 </template>
+
+<script setup>
+const token = useCookie('token');
+const { data: profile } = await useFetch('/api/profile', {
+  headers: {
+    'Authorization': `Bearer ${token.value}`
+  }
+});
+const profileApi = profile.value;
+
+const newPassword = ref('');
+const phoneNumber = ref('');
+const description = ref('');
+
+const updateProfile = async () => {
+  try {
+    console.log(profileApi.phoneNumber);
+    const response = await fetch('/api/edit-profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token.value}`
+      },
+      body: JSON.stringify({
+        phoneNumber: profileApi.phoneNumber,
+        description: profileApi.description,
+        password: newPassword.value
+      }),
+    });
+
+    if (response.ok) {
+      const editProfile = await response.json();
+      console.log(editProfile);
+      alert('Profil berhasil diubah');
+    } else {
+      console.error('Failed to edit profile:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error', error);
+  }
+};
+</script>
 
 <style>
 .file-input-wrapper {
@@ -107,7 +81,7 @@ const isInputDisabled = ref(true);
   color: #888;
 }
 
-.disable{
+.disable {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 </style>

@@ -14,16 +14,16 @@ export default defineEventHandler(async (event) => {
     acId: acIdHeaders,
     meetingId: meetingIdHeaders,
     type: typeHeaders,
-    nameMaterial: nameMaterialHeaders,
+    materialName: nameMaterialHeaders,
     assignmentId: idAssignmentHeaders,
     quizId: idQuizHeaders,
   };
 
-  const materi = `https://b6f9-202-148-15-210.ngrok-free.app/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&nameMaterial=${requestData.nameMaterial}&type=${requestData.type}`
+  const materi = `${runtimeConfig.URL2}/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&materialName=${requestData.materialName}&type=${requestData.type}`
 
-  const tugas = `https://b6f9-202-148-15-210.ngrok-free.app/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&idAssignment=${requestData.assignmentId}&type=${requestData.type}`
+  const tugas = `${runtimeConfig.URL2}/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&assignmentId=${requestData.assignmentId}&type=${requestData.type}`
 
-  const quiz = `https://b6f9-202-148-15-210.ngrok-free.app/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&idAssignment=${requestData.quizId}&type=${requestData.type}`
+  const quiz = `${runtimeConfig.URL2}/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&quizId=${requestData.quizId}&type=${requestData.type}`
 
   let response;
   let result;

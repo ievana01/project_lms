@@ -1,26 +1,25 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
+  console.log('start', body);
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/assignments/comment/${body.id}`, {
-    method: 'POST',
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/quizzes/start/${body.id}`, {
+    method:'POST',
     headers: {
       'Id': runtimeConfig.Id,
       'Secret': runtimeConfig.Secret,
       'Partner': runtimeConfig.Partner,
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      content: body.content,
-    }), 
   });
-
+  console.log('start', response);
   if (response.ok) {
-    const saveComment = await response.json();
-    return saveComment;
+    const startQuiz = await response.json();
+    console.log('start:', startQuiz);
+    return startQuiz;
   } else {
-    throw new Error('Failed to save comment');
+    console.error('Failed to start quiz:', response.statusText);
+    throw new Error('Failed to start quiz');
   }
 });

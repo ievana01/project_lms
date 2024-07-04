@@ -1,9 +1,11 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
+  console.log('quiz', body);
+
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/assignments/comment/${body.id}`, {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/chats/create/${body.id}`, {
     method: 'POST',
     headers: {
       'Id': runtimeConfig.Id,
@@ -13,14 +15,20 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify({
-      content: body.content,
-    }), 
+      name: body.name,
+      date: body.date,
+      category: body.category,
+    }),
   });
 
+  console.log('save', response);
+
   if (response.ok) {
-    const saveComment = await response.json();
-    return saveComment;
+    const createRoomchat = await response.json();
+    console.log('Submit:', createRoomchat);
+    return createRoomchat;
   } else {
-    throw new Error('Failed to save comment');
+    console.error('Failed to create room chat:', response.statusText);
+    throw new Error('Failed to create room chat');
   }
 });

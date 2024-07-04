@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const token = cookies.token;
 
   //enrolment
-  const response = await fetch('https://b6f9-202-148-15-210.ngrok-free.app/imavi/enrollments/get', {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/enrollments/get`, {
     headers: {
       'Id': runtimeConfig.Id,
       'Secret': runtimeConfig.Secret,

@@ -1,10 +1,10 @@
 export default defineEventHandler(async (event) => {
-  let body = await readBody(event)
-  console.log('ini detail kursus', body)
+  let body = await readBody(event);
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/activeCourses/get-detail/${body.id}`, {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/chats/send/${body.id}`, {
+    method: 'POST',
     headers: {
       'Id': runtimeConfig.Id,
       'Secret': runtimeConfig.Secret,
@@ -12,13 +12,16 @@ export default defineEventHandler(async (event) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
+    body: JSON.stringify({
+      message: body.message,
+      receiverId: body.receiverId,
+    }),
   });
-  console.log(response)
+
   if (response.ok) {
-    const detailCourse = await response.json();
-    console.log('ini detail kursus', detailCourse)
-    return detailCourse;
+    const sendMessage = await response.json();
+    return sendMessage;
   } else {
-    return { error: 'Unable to fetch detail course' };
+    throw new Error('Failed to send message');
   }
 });

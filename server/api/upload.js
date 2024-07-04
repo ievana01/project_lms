@@ -1,6 +1,5 @@
 import { PutObjectCommand, S3 } from '@aws-sdk/client-s3';
 export default defineEventHandler(async (event) => {
-  //   const body = await readBody(event);
   const body = await readMultipartFormData(event);
 
   console.log(body[1].data.toString());

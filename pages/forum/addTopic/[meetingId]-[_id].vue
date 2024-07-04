@@ -20,7 +20,7 @@ const { data: topik } = await useFetch('/api/get-forum-diskusi', {
   body: JSON.stringify({ profileToken: token.value })
 });
 
-const topikKelas = ref(topik.value); // Pastikan topikKelas diinisialisasi sebagai ref()
+const topikKelas = topik.value;
 
 const forumName = ref('');
 const deskripsi = ref('');

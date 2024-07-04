@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch(`${runtimeConfig.URL2}/imavi/assignments/comment/${body.id}`, {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/activeCourses/submit-attendances`, {
     method: 'POST',
     headers: {
       'Id': runtimeConfig.Id,
@@ -13,14 +13,19 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify({
-      content: body.content,
+      acId: body.acId,
+      meetingId: body.meetingId,
+      meetingName: body.meetingName,
+      status: body.status,
+      isOnTime: body.isOnTime,
+      isMaterialAvailable:body.isMaterialAvailable
     }), 
   });
 
   if (response.ok) {
-    const saveComment = await response.json();
-    return saveComment;
+    const submitAttendance = await response.json();
+    return submitAttendance;
   } else {
-    throw new Error('Failed to save comment');
+    throw new Error('Failed to submit attendance');
   }
 });

@@ -1,9 +1,11 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
+  console.log(body)
   const runtimeConfig = useRuntimeConfig();
+  console.log(runtimeConfig)
   const cookies = parseCookies(event);
   const token = cookies.token;
-  const response = await fetch('https://b6f9-202-148-15-210.ngrok-free.app/', {
+  const response = await fetch(`${runtimeConfig.URL2}/imavi/events/create`, {
     method: 'POST',
     headers: {
       'Id': runtimeConfig.Id,
@@ -18,10 +20,12 @@ export default defineEventHandler(async (event) => {
       content: body.category,
     }), 
   });
+  console.log(response)
+
   if (response.ok) {
     const addEvent = await response.json();
     return addEvent;
   } else {
-    throw new Error('Failed to save comment');
+    throw new Error('Failed to add event');
   }
 });
