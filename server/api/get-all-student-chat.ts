@@ -1,6 +1,4 @@
-export default defineEventHandler(async (event) => {
-  let body = await readBody(event);
-  
+export default defineEventHandler(async (event) => {  
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
@@ -13,12 +11,8 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  console.log('get all student', response);
-  
   if (response.status == 200) {
-    const getStudentChat = await response.json();
-    console.log('get all student',getStudentChat);
-    
+    const getStudentChat = await response.json();    
     return getStudentChat;
   } else {
     throw new Error('Failed to get student chat ');

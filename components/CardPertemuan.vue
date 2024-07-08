@@ -133,8 +133,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
 let token = useCookie('token');
 const route = useRoute();
 

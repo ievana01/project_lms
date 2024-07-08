@@ -22,8 +22,6 @@ watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
 })
 
 let token = useCookie('token')
-console.log(token.value)
-
 onMounted(() => {
   if (token.value == undefined) {
     return navigateTo('/login')
@@ -37,7 +35,6 @@ const { data: profile } = await useFetch('/api/profile', {
 if (profile.value) {
   const profileApi = ref();
   profileApi.value = profile.value;
-console.log(profileApi.value)
 }
 
 </script>

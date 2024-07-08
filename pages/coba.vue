@@ -1,6 +1,5 @@
-    <template>
-      <div v-if="$viewport.isLessThan('tablet')">
-        <div v-if="!selectedUser">
+<template>
+<div v-if="!selectedUser">
           <div class="ms-2">
             <v-btn class="button mb-4" prepend-icon="mdi-plus" rounded="lg" @click="toggleNewMessagePanel">pesan baru</v-btn>
           </div>
@@ -8,11 +7,11 @@
             <v-sheet color="var(--yellow)" class="pb-4" rounded>
               <div class="pt-4 ms-2 mr-2">
                 <v-text-field density="compact" label="Cari orang" prepend-inner-icon="mdi-magnify" variant="solo-filled" flat
-                  single-line style="width: 250px;" v-model="search"></v-text-field>
+                  single-line style="width: 250px;"></v-text-field>
               </div>
               <v-card class="ms-2 mr-2" >
                 <div class="">
-                  <div v-for="(user, index) in filteredUsers" :key="index" class="d-flex">
+                  <div v-for="(user, index) in getUser" :key="index" class="d-flex">
                     <v-btn class="ma-3" size="small" color="#612D81" icon="mdi-account" variant="outlined"></v-btn>
                     <v-card-text class="mt-2" @click="createRoomChat(user._id)">{{ user.fullName}}</v-card-text>
                   </div>
@@ -20,11 +19,12 @@
               </v-card>
             </v-sheet>
           </div>
+
           <div class="ms-2 mt-4">
             <h1>Pesan</h1>
           </div>
           
-          <div class="ms-2 mr-2 mb-4" @click="openChat(userChat.fullName,userChat._id)" v-for="(userChat, index) in dataUserChat"
+          <div class="ms-2 mr-2 mb-4" @click="openChat(userChat.fullName, userChat._id)" v-for="(userChat, index) in dataUserChat"
             :key="index">
             <v-card color="var(--grey)" style="max-height: auto;">
               <div class="d-flex">
@@ -51,7 +51,7 @@
             </v-sheet>
           </div>
           <div class="ms-2 mr-2 pt-5"
-            style="background-color: var(--grey); display: flex; align-items: center; justify-content: space-between; margin-top: 200px">     
+            style="background-color: var(--grey); display: flex; align-items: center; justify-content: space-between; margin-top: 200px">
             <v-text-field density="compact" label="Ketik pesan anda disini..." variant="solo" flat single-line
               rounded="lg" class="ms-2 mr-2" v-model="message">
               <template v-slot:append-inner >
@@ -60,97 +60,9 @@
             </v-text-field>
           </div>
         </div>
-      </div>
-
-      <div v-if="$viewport.isGreaterOrEquals('tablet')">
-        <div class="ms-2 d-flex">
-          <v-sheet style="background-color: var(--grey); width: 400px;" class="pt-4 pb-4">
-            <div class="ms-2">
-              <v-btn class="button" prepend-icon="mdi-plus" rounded="lg" @click="toggleNewMessagePanel">pesan baru</v-btn>
-            </div>
-
-            <div  v-if="showNewMessagePanel" class="ms-2 mr-2">
-            <v-sheet color="var(--yellow)" class="pb-4" rounded>
-              <div class="pt-4 ms-2 mr-2">
-                <v-text-field density="compact" label="Cari orang" prepend-inner-icon="mdi-magnify" variant="solo-filled" flat
-                  single-line style="width: 250px;" v-model="search"></v-text-field>
-              </div>
-              
-              <v-card class="ms-2 mr-2" >
-                <div class="">
-                  <div v-for="(user, index) in filteredUsers" :key="index" class="d-flex">
-                    <v-btn class="ma-3" size="small" color="#612D81" icon="mdi-account" variant="outlined"></v-btn>
-                    <v-card-text class="mt-2" @click="createRoomChat(user._id)">{{ user.fullName}}</v-card-text>
-                  </div>
-                </div>
-              </v-card>
-            </v-sheet>
-          </div>
-
-
-            <div class="ms-2 mt-4">
-                <h1>Pesan</h1>
-              </div>
-            
-              <div v-for="(userChat, index) in dataUserChat" :key="index" class="ms-2 mr-2 mb-4" @click="openChat(userChat.fullName, userChat._id)">
-              <v-card color="var(--white)" style="max-height: auto;">
-                <div class="d-flex">
-                  <v-btn class="ma-3" size="small" color="#612D81" icon="mdi-account" variant="outlined"></v-btn>
-                  <v-card-text class="mt-2">{{ userChat.fullName }}</v-card-text>
-                </div>
-              </v-card>
-            </div>
-          </v-sheet>
-
-          <v-sheet v-if="!selectedUser"
-            style="background-color: var(--grey); width: 100%; display: flex; justify-content: center; align-items: center;"
-            class="ms-4 mr-4 text-center">
-            <v-card text="Pilih obrolan untuk memulai mengirim pesan" color="var(--purple)"
-              style="color: white; width: 400px;" class="ms-4 mr-4">
-            </v-card>
-          </v-sheet>
-
-          <div v-if="selectedUser" style="width: 100%;">
-            <v-sheet color="var(--grey)" rounded class="d-flex align-center justify-space-between ms-2 mr-2">
-              <v-icon @click="selectedUser = null">mdi-chevron-left</v-icon>
-              <v-btn class="ma-3" size="x-small" color="#612D81" icon="mdi-account" variant="outlined"></v-btn>
-              <span>{{ selectedUser }}</span>
-              <v-spacer></v-spacer>
-            </v-sheet>
-            <div class="ms-11 pt-4 mr-11">
-              <v-sheet color="var(--grey)" style="border: 2px solid black; margin-right: auto;"
-                class="d-flex align-center justify-space-between mb-4" v-for="(chat, index) in getChat" :key="index">
-                <div class="pt-2 ms-2">
-                  <p style="color: var(--purple)!important; font-weight: bold">{{ chat.senderName }}</p>
-                  <p>{{ chat.message }}</p>
-                </div>
-              </v-sheet>
-            </div>
-            <div class="ms-2 mr-2 pt-5"
-              style="background-color: var(--grey); display: flex; align-items: center; justify-content: space-between; margin-top: 200px;">
-              <v-text-field density="compact" label="Ketik pesan anda disini..." variant="solo" flat single-line
-                rounded="lg" class="ms-2 mr-2" v-model="message">
-                <template v-slot:append-inner>
-                  <v-btn icon="mdi-send" variant="text" color="#612D81" @click="sendMessage(selectedChatId, selectedUserId)"></v-btn>
-                </template>
-              </v-text-field>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
+</template>
 
 <script setup>
-  import { useNuxtApp } from '#app'
-  const { $viewport } = useNuxtApp()
-
-  watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
-    console.log('Breakpoint updated:', oldBreakpoint, '->', newBreakpoint)
-  })
-
-
-
-  
 const showNewMessagePanel = ref(false);
 
 const toggleNewMessagePanel = () => {
@@ -165,16 +77,6 @@ const token = useCookie('token');
   });
   const getUser = ref(allUser.value); 
   console.log(getUser);
-
-  const search = ref('')
-  const filteredUsers = computed(() => {
-  if (!search.value) {
-    return getUser.value
-  }
-  return getUser.value.filter(user =>
-    user.fullName.toLowerCase().includes(search.value.toLowerCase())
-  )
-})
   
   //2.create chat room
   const createRoomChat = async (id) => {
@@ -274,6 +176,4 @@ const pesan = async (id) => {
     selectedUser.value = user;
   };
 
-  </script>
-
-  <style></style>
+</script>

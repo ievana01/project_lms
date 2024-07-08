@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
       forumId: body.forumId,
     }), 
   });
-
+  
   if (response.ok) {
     const addForum = await response.json();
     return addForum;

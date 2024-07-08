@@ -9,7 +9,7 @@
         <v-sheet style="border: 1px solid grey!important;" rounded @click="openDatePicker" height="56px">
           <div class="ms-2 pt-4">
             <v-icon>mdi-calendar-month</v-icon>
-            <span class="ms-2" style="font-size: 14px;">{{ selectedDate ? formatDateApi(selectedDate) : 'Pilih tanggal'
+            <span class="ms-2" style="font-size: 14px;">{{ selectedDate ? formatDate(selectedDate) : 'Pilih tanggal'
               }}</span>
           </div>
         </v-sheet>
@@ -28,6 +28,7 @@
 <script setup>
 import { constructNow, format } from 'date-fns';
 import { id } from 'date-fns/locale';
+const router = useRouter();
 
 const selectedDate = ref(null);
 const dialog = ref(false);
@@ -59,9 +60,6 @@ const formatDateApi = (date) => {
 };
 
 const addEvent = async () => {
-  console.log(namaAcara.value);
-  console.log(kategoriAcara.value);
-  console.log(selectedDate.value);
   try {
     const response = await fetch('/api/add-event', {
       method: 'POST',
@@ -75,14 +73,12 @@ const addEvent = async () => {
         category: kategoriAcara.value,
       })
     });
-    if (response.ok) {
+    if (response.status == 200) {
       const tambahEvent = await response.json();
       dataEvent.value.push(tambahEvent);
-
-      console.log('sukses tambah event')
-    } else {
-      console.error('Failed to save event:', response.statusText);
-    }
+      alert('Berhasil menambahkan event')
+      router.push('/calendar')
+    } 
   } catch (error) {
     console.error('Error saving event:', error);
   }

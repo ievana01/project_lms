@@ -13,11 +13,12 @@
 </template>
 
 <script setup>
+const router = useRouter();
 
 const token = useCookie('token');
-const { data: topik } = await useFetch('/api/get-forum-diskusi', {
+const { data: topik } = await useFetch('/api/get-forum-kelas', {
   method: 'POST',
-  body: JSON.stringify({ profileToken: token.value })
+  body: JSON.stringify({ profileToken: token.value, id: useRoute().params.meetingId })
 });
 
 const topikKelas = topik.value;
@@ -28,11 +29,6 @@ const meetingId = ref(useRoute().params.meetingId);
 const forumId = ref(useRoute().params._id);
 
 const addForum = async () => {
-  console.log(forumName.value);
-  console.log(deskripsi.value);
-  console.log(meetingId.value);
-  console.log(forum.value);
-  
   try {
     const response = await fetch('/api/add-forum', {
       method: 'POST',
@@ -44,15 +40,15 @@ const addForum = async () => {
         name: forumName.value,
         content: deskripsi.value,
         meetingId: meetingId.value,
-        topicId: topicId.value,
+        forumId: forumId.value,
       }),
     });
 
     if (response.ok) {
-      const tambahForum = await response.json();
-      topikKelas.value.push(tambahForum); // Pastikan push ke topikKelas.value
+      alert('Berhasil menambahkan topik baru')
+      router.push(`/forum/${meetingId.value}-${forumId.value}`);
     } else {
-      console.error('Failed to save forum:', response.statusText);
+      alert('Gagal menambahkan topik')
     }
   } catch (error) {
     console.error('Error saving forum:', error);

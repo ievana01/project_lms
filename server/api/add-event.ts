@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
-  console.log(body)
   const runtimeConfig = useRuntimeConfig();
   console.log(runtimeConfig)
   const cookies = parseCookies(event);
@@ -17,10 +16,9 @@ export default defineEventHandler(async (event) => {
     body: JSON.stringify({
       name: body.name,
       date: body.date,
-      content: body.category,
+      category: body.category,
     }), 
   });
-  console.log(response)
 
   if (response.ok) {
     const addEvent = await response.json();

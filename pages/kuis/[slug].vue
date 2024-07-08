@@ -23,11 +23,11 @@
     <div v-else>
         <div class="text-center mt-16 mb-8">
              <p>Waktu pengerjaan {{ detailKuis.duration }} menit</p>
-            <!-- agreement -->
-            <v-btn class="button pa-2 mr-2 ml-2" @click="startQuiz" rounded="lg">Kerjakan Kuis</v-btn>
+            <div>
+                <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" @click="confirmQuiz">Kerjakan Kuis</v-btn>
+            </div>
         </div>
     </div>
-
 </template>
 
 <script setup>
@@ -53,7 +53,24 @@ const detailKuis = ref();
 detailKuis.value = kuis.value;
 console.log(detailKuis);
 
+const { $swal } = useNuxtApp()
+
 const router = useRouter();
+const confirmQuiz = () => {
+$swal.fire({
+    title : 'Apakah anda yakin memulai kuis?',
+    text: 'Setelah kuis dimulai, jangan melakukan refresh atau kembali ke halaman sebelummnya, karena tindakan tersebut akan dianggap telah menyelesaikan kuis!',
+    icon: 'question', 
+    showCancelButton: true,
+    confirmButtonText: 'Yakin',
+    cancelButtonText:'Batal'
+}).then((result) =>{
+    if(result.isConfirmed){
+        startQuiz();
+    }
+})
+};
+
 const startQuiz = async () => {
     const response = await fetch('/api/start-quiz', {
         method: 'POST',
@@ -65,10 +82,8 @@ const startQuiz = async () => {
             id: useRoute().params.slug,
         })
     });
-    console.log(response);
     if (response.status == 200) {
         const data = await response.json();
-        console.log('start kuis',data.value);
         router.push({
             path: `/kuis/kerjaKuis/${useRoute().params.slug}`,
             query: {
@@ -76,8 +91,6 @@ const startQuiz = async () => {
                 endTime: data.endTime
             }
         });
-    } else {
-        console.log(response);
     }
 };
 </script>

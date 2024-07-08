@@ -8,32 +8,78 @@
   <v-sheet style="background-color: var(--grey);" rounded class="ms-4 mr-4 mb-6">
     <p class="pl-2 pr-2">{{ dataTugas.description }}</p>
   </v-sheet>
-  <div>
+  <div class="ms-1 mr-1">
+        <v-table v-if="dataTugas.finishedAssignment" class="mr-2">
+          <thead>
+            <tr>
+              <th class="text-left tabel" style="font-weight: bold;">Status Pengajuan Tugas</th>
+              <th class="tabel"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="dataTugas.isSubmitting">
+              <td>Status Pengajuan</td>
+              <td>: Diajukan</td>
+            </tr>
+            <tr v-if="dataTugas.isSubmitting">
+              <td>Status Penilaian</td>
+              <td>: Proses Dinilai</td>
+            </tr>
+            <tr>
+              <td>Waktu tersisa</td>
+              <td>: {{ remainingTime }}</td>
+            </tr>
+            <tr>
+              <td>Terakhir diubah</td>
+              <td>: {{ formattedDate(dataTugas.finishedAssignment.timestamp) }}</td>
+            </tr>
+            <tr v-if="dataTugas.finishedAssignment && dataTugas.finishedAssignment.link && dataTugas.finishedAssignment.link.length">
+              <td>Berkas pengajuan</td>
+              <td v-for="(link, index) in dataTugas.finishedAssignment.link" :key="index">: <a :href="link" class="mr-4">{{ link }}</a></td>
+            </tr>
+            <tr>
+              <td>Komentar pengajuan</td>
+              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar(0)</v-btn></td>
+            </tr>
+          </tbody>
+        </v-table>
 
-    <v-sheet style="background-color: var(--grey);" rounded class="ms-4 mr-4">
-      <div class="pl-2 pr-2" v-if="dataTugas.finishedAssignment">
-        <div v-if="dataTugas.isSubmitting">
-          <h6>Status Pengajuan Tugas</h6>
-          <p v-if="dataTugas.isSubmitting">Status pengajuan : Diajukan</p>
-          <p v-if="dataTugas.isSubmitting">Status penilaian : Proses dinilai</p>
-          <p>Waktu tersisa : {{ remainingTime }}</p>
-          <p>Terakhir diubah : {{ formattedDate(dataTugas.finishedAssignment.timestamp) }}</p>
-          <p>Berkas pengajuan : <a :href="dataTugas.link">{{ dataTugas.finishedAssignment.link }}</a></p>
-          <p>Komentar pengajuan :<v-btn variant="text" @click="toggleComment">Komentar(0)</v-btn></p>
-        </div>
+        <v-table v-else class="mr-2">
+          <thead>
+            <tr>
+              <th class="text-left tabel" style="font-weight: bold;">Status Pengajuan Tugas</th>
+              <th class="tabel" ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Status Pengajuan</td>
+              <td>: Tidak ada pengajuan</td>
+            </tr>
+            <tr>
+              <td>Status Penilaian</td>
+              <td>: Tidak Dinilai</td>
+            </tr>
+            <tr>
+              <td>Waktu tersisa</td>
+              <td>: {{ remainingTime }}</td>
+            </tr>
+            <tr>
+              <td>Terakhir diubah</td>
+              <td>: - </td>
+            </tr>
+            <tr>
+              <td>Berkas pengajuan</td>
+              <td>: -</td>
+            </tr>
+            <tr>
+              <td>Komentar pengajuan</td>
+              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar(0)</v-btn></td>
+            </tr>
+          </tbody>
+        </v-table>
 
-      </div>
-      <div v-else>
-        <h6>Status Pengajuan Tugas</h6>
-        <p>Status pengajuan : Tidak ada pengajuan</p>
-        <p>Status penilaian : Tidak dinilai</p>
-        <p>Waktu tersisa : {{ remainingTime }}</p>
-        <p>Terakhir diubah : -</p>
-        <p>Berkas pengajuan : -</p>
-        <p>Komentar pengajuan :<v-btn variant="text" @click="toggleComment">Komentar(0)</v-btn></p>
-      </div>
-    </v-sheet>
-    <v-sheet rounded class="ms-4 mr-4">
+    <v-sheet rounded class="ms-2 mr-2 pt-4">
       <div v-if="dataTugas.commentAssignment">
         <v-row v-for="(komen, index) in dataTugas.commentAssignment" :key="index">
           <v-col class="mr-2 pt-0 mt-2">
@@ -187,11 +233,6 @@ const handleFileChange = (event) => {
   }
 };
 
-// const acName = ref('');
-// const acId = ref(useRoute().params.slug);
-// const meetingId = ref('');
-// const link = ref('');
-
 const submitTugas = async (link) => {
   const response = await fetch('/api/submit-tugas', {
     method: 'POST',
@@ -289,5 +330,10 @@ const remainingTime = computed(() => {
 .swal2-show {
   width: 300px;
   height: auto;
+}
+
+
+.tabel{
+  white-space: nowrap;
 }
 </style>
