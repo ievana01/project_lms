@@ -28,7 +28,6 @@ const { data: forum } = await useFetch('/api/get-forum-diskusi', {
 });
 
 const diskusiForum = ref(Array.isArray(forum.value) ? forum.value : [forum.value]);
-console.log(diskusiForum.value);
 </script>
 
 <style></style>

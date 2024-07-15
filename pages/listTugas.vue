@@ -1,4 +1,5 @@
 <template>
+  <Loading v-if="loading"></Loading>
   <div class="ms-4 pb-2">
     <h1>Tugas untuk Semua Kursus</h1>
   </div>
@@ -10,9 +11,9 @@
       </v-col>
     </v-row>
   </div>
-  <div class="ms-4 mr-4 mb-4 ma-2" v-if="daftarTugas != 0">
-    <v-sheet v-for="(tugas, index) in daftarTugas" :key="index" :max-height="expandedPanels[index] ? 'auto' : 'auto'"
-      elevation="2" rounded v-if="selectedBtn == 'going'">
+  <div class="ms-2 mr-4 mb- ma-2" v-if="daftarTugas != 0 && filteredTugas.length > 0">
+    <v-sheet v-for="(tugas, index) in filteredTugas" :key="index" :max-height="expandedPanels[index] ? 'auto' : 'auto'"
+      elevation="2" rounded v-if="selectedBtn == 'going'" class="mb-6">
       <v-row>
         <v-col cols="10">
           <div class="pl-2">
@@ -43,11 +44,29 @@
     </v-sheet>
   </div>
 
-  <div v-if="selectedBtn === 'late'" class="ms-2 mr-2">
-    <v-sheet v-if="lateAssignments.length > 0" style="background-color: var(--grey); min-height: 50px; width: 100%;" rounded>
-      <div class="ms-2 pt-2">
-        <p>Ada tugas terlambat</p>
-      </div>
+  <div v-if="selectedBtn === 'late'" class="ms-2 mr-2 mb-6" >
+    <v-sheet v-if="lateAssignments.length > 0" v-for="(tugasTerlambat, index) in lateAssignments" :key="index" :max-height="expandedPanels[index] ? 'auto' : 'auto'"
+      elevation="2" rounded >
+      <v-row >
+        <v-col cols="10">
+          <div class="pl-2">
+            <span @click="toggleExpansionPanel(index)">
+              <v-icon>{{ expandedPanels[index] ? 'mdi-chevron-down' : 'mdi-chevron-right' }}</v-icon> {{
+                tugasTerlambat.courseName }}
+            </span>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row v-if="expandedPanels[index]" class="px-4">
+        <div class="ms-4 mr-2 pb-2">
+          <NuxtLink :to="`/kelas/${tugasTerlambat.acId}`" style="color: black;">
+            <div class="ms-4">
+              <span>{{ tugasTerlambat.name }}</span><br>
+              <span>Ditutup: {{ formattedDate(tugasTerlambat.dateEnd) }}</span>
+            </div>
+          </NuxtLink>
+        </div>
+      </v-row>
     </v-sheet>
     <v-sheet v-else style="background-color: var(--grey); min-height: 50px; width: 100%;" rounded>
       <div class="ms-2 pt-2">
@@ -69,23 +88,21 @@ watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
 });
 const selectedBtn = ref('going');
 
+const loading = ref(true);
+
 const token = useCookie('token');
 const { data: tugas } = await useFetch('/api/daftartugas', {
   headers: {
     'Authorization': `Bearer ${token.value}`
   }
 });
-
+loading.value=false;
 const daftarTugas = ref(tugas.value);
 const now = new Date();
+const filteredTugas = ref(daftarTugas.value.filter(tugas => new Date(tugas.dateEnd) >= now));
 const lateAssignments = ref(daftarTugas.value.filter(tugas => new Date(tugas.dateEnd) < now));
 
-const expandedDesKelas = ref(false);
 const expandedPanels = ref(daftarTugas.value.map(() => false));
-
-const toggleExpansionDesKelas = () => {
-  expandedDesKelas.value = !expandedDesKelas.value;
-};
 
 const toggleExpansionPanel = (index) => {
   expandedPanels.value[index] = !expandedPanels.value[index];

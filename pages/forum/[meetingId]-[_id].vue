@@ -14,7 +14,6 @@ const { data: topik } = await useFetch('/api/get-forum-kelas', {
 const idForum = useRoute().params._id
 
 const topikKelas = topik.value;
-console.log(topikKelas.value);
 
 </script>
 

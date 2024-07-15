@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     quizId: idQuizHeaders,
   };
 
-  const materi = `${runtimeConfig.URL2}/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&materialName=${requestData.materialName}&type=${requestData.type}`
+  const materi = `${runtimeConfig.URL2}/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&type=${requestData.type}&materialName=${requestData.materialName}`
 
   const tugas = `${runtimeConfig.URL2}/imavi/activeCourses/student-finish-meeting?acId=${requestData.acId}&meetingId=${requestData.meetingId}&assignmentId=${requestData.assignmentId}&type=${requestData.type}`
 
@@ -27,7 +27,8 @@ export default defineEventHandler(async (event) => {
 
   let response;
   let result;
-
+  console.log('materi', materi);
+  
   if (requestData.type == 'materi') {
     response = await fetch(materi, {
       method: 'POST',
@@ -38,6 +39,7 @@ export default defineEventHandler(async (event) => {
         'Authorization': `Bearer ${token}`,
       },
     });
+    console.log('file', response);
     result = await response.json();
   } else if (requestData.type == 'tugas') {
     response = await fetch(tugas, {

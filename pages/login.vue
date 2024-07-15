@@ -1,4 +1,5 @@
 <template>
+  <Loading v-if="loading"></Loading>
   <v-container class="container">
     <v-card elevation="20" class="card-login">
       <div class="logo">
@@ -21,6 +22,17 @@
 <style></style>
 
 <script setup>
+import Swal from 'sweetalert2';
+
+const nuxtApp = useNuxtApp();
+const loading = ref(true);
+nuxtApp.hook("page:start", () => {
+  loading.value = true;
+});
+nuxtApp.hook("page:finish", () => {
+  loading.value = false;
+});
+
 definePageMeta({
   layout: 'blank'
 })
@@ -28,7 +40,6 @@ definePageMeta({
 let username = ref('');
 let password = ref('');
 
-const { $swal } = useNuxtApp()
 const router = useRouter()
 const token = useCookie('token')
 const login = async () => {
@@ -39,8 +50,7 @@ const login = async () => {
   if (data.value) {
     if (data.value.status == 200) {
       token.value = data.value.result.profileToken;
-      console.log(token.value);
-      $swal.fire({
+      Swal.fire({
         title: 'Berhasil',
         text: 'Sukses Login',
         icon: 'success',
@@ -49,18 +59,17 @@ const login = async () => {
         activity()
         router.push('/dasbor')
       })
-      console.log(data.value);
     }
     else {
-      $swal.fire({
+      Swal.fire({
         title: 'Gagal',
-        text: data.value.message,
+        text: data.value.message ?? 'Username atau password salah',
         icon: 'error',
         confirmButtonText: 'OK'
       })
     }
   }else{
-    $swal.fire({
+    Swal.fire({
         title: 'Error',
         text: 'Server error, silahkan muat ulang!',
         icon: 'error',
@@ -76,7 +85,6 @@ const activity = async() => {
             'Authorization': `Bearer ${token.value}`
         },
     });
-    console.log(response.status);
 };
 </script>
 

@@ -2,7 +2,16 @@
   <div class="ms-2 mt-2">
     <h1>Notifikasi</h1>
   </div>
-  <div>
+
+  <div v-if="!getNotification.length" class="ms-2 mr-2">
+    <v-sheet color="var(--grey)" rounded>
+      <div class="ms-2 mt-2 pt-2 pb-1 mr-2">
+        <p>Tidak ada tugas atau kuis yang perlu dikerjakan</p>
+      </div>
+    </v-sheet>
+  </div>
+
+  <div v-else>
     <v-row class="py-2">
       <v-col cols="auto" class="d-flex">
         <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" to="" @click="selectedBtn = 'Tugas'">Tugas</v-btn>
@@ -69,7 +78,6 @@ const { data: notification } = await useFetch('/api/get-notification', {
   body: JSON.stringify({ profileToken: token.value })
 });
 const getNotification = ref(notification.value);
-console.log(getNotification);
 </script>
 
 <style>

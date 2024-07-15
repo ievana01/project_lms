@@ -31,9 +31,7 @@ const { data: profile } = await useFetch('/api/profile', {
 
 const profileApi = ref();
 profileApi.value = profile.value;
-console.log(profileApi);
 const access = profileApi.value.access;
-console.log(access);
 
 const formattedDate = (dateString) => {
   try {

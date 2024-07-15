@@ -26,4 +26,11 @@ const kelasFiltered = ref([])
 
 </script>
 
-<style></style>
+<style>
+@media (min-width: 1280px) {
+    .v-container {
+        max-width: 1440px;
+    }
+}
+
+</style>

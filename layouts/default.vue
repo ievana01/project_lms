@@ -1,4 +1,5 @@
 <template>
+  <Loading v-if="loading"></Loading>
   <div v-if="$viewport.isLessThan('tablet')">
     <HeaderMobile />
   </div>
@@ -15,17 +16,48 @@
 <script setup>
 import { useNuxtApp } from '#app'
 import { onMounted } from 'vue';
-let { $viewport } = useNuxtApp()
+
+const nuxtApp = useNuxtApp();
+const loading = ref(true);
+nuxtApp.hook("page:start", () => {
+  loading.value = true;
+});
+nuxtApp.hook("page:finish", () => {
+  loading.value = false;
+});
+
+let { $viewport } = useNuxtApp();
 
 watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
   console.log('Breakpoint updated:', oldBreakpoint, '->', newBreakpoint)
 })
-
+let timer;
 let token = useCookie('token')
 onMounted(() => {
-  if (token.value == undefined) {
+  if (!token.value) {
     return navigateTo('/login')
   }
+
+  // const resetTimer = () => {
+  //   clearTimeout(timer);
+  //   timer = setTimeout(() => {
+  //     token.value = undefined;
+  //     navigateTo('/login');
+  //   }, 10 * 60 * 1000);
+  // };
+
+  // resetTimer();
+
+  // const activityEvents = ['click', 'mousemove', 'keydown', 'scroll'];
+  // activityEvents.forEach(event => {
+  //   document.addEventListener(event, resetTimer);
+  // });
+
+  // onBeforeUnmount(() => {
+  //   activityEvents.forEach(event => {
+  //     document.removeEventListener(event, resetTimer);
+  //   });
+  // });
 });
 
 const { data: profile } = await useFetch('/api/profile', {
@@ -35,6 +67,7 @@ const { data: profile } = await useFetch('/api/profile', {
 if (profile.value) {
   const profileApi = ref();
   profileApi.value = profile.value;
+  loading.value = false;
 }
 
 </script>

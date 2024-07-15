@@ -1,5 +1,7 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
+  console.log(body);
+  
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
@@ -17,9 +19,12 @@ export default defineEventHandler(async (event) => {
       receiverId: body.receiverId,
     }),
   });
-
+  console.log(response);
+  
   if (response.ok) {
     const sendMessage = await response.json();
+    console.log(sendMessage);
+    
     return sendMessage;
   } else {
     throw new Error('Failed to send message');

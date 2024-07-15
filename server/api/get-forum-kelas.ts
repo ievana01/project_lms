@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event)
-  console.log('ini forum kelas', body)
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
@@ -13,10 +12,9 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  console.log(response)
+  
   if (response.ok) {
     const topikKelas = await response.json();
-    console.log('ini forum kelas', topikKelas)
     return topikKelas;
   } else {
     return { error: 'Unable to forum kelas' };

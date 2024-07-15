@@ -39,55 +39,90 @@
         <v-row v-if="expandedPanels[index]" class="px-4">
           <!-- absensi -->
           <div>
-            <div class="ms-8 mb-2" v-if="item.attendance">
-              <v-icon left class="mr-2" color="green">mdi-check-circle-outline</v-icon><span
-                style="color: black!important">{{ item.attendance.meetingName }}</span>
-            </div>
+            <div class="ms-8 mb-2 d-flex" v-if="item.attendance">
+                <NuxtLink>
+                  <div class="file-content mt-2">
+                    <v-icon left class="mr-2" color="green">{{ getIcon('absensi') }}</v-icon><span style="color: black">{{ item.attendance.meetingName }}</span> 
+                  </div>
+                </NuxtLink>
+              </div>
             <div v-else>
               <div class="ms-8 mb-2 d-flex">
                 <NuxtLink :to="`/absensi/${detailCourse._id}-${item._id}`">
-                  <v-icon left class="mr-2" color="black">mdi-check-circle-outline</v-icon><span
-                    style="color: black!important">{{ item.name }}</span>
+                  <div class="file-content mt-2">
+                    <v-icon left class="mr-2" color="black">{{ getIcon('absensi') }}</v-icon><span style="color: black">{{ item.attendance.meetingName }}</span> 
+                  </div>
                 </NuxtLink>
               </div>
             </div>
           </div>
 
+          <!-- forum -->
+          <div v-if="item.forums.length" class="ms-4 mr-2 w-100 mt-1">
+              <div v-for="(forum, fIndex) in item.forums" :key="fIndex" class="assignment-item mb-4 ms-4 mr-4">
+                <NuxtLink :to="`/forum/${forum.meetingId}-${forum._id}`" style="color: black;">
+                  <div class="file-content mt-2">
+                    <v-icon left class="mr-2">{{ getIcon('forum') }}</v-icon> {{ forum.name }}
+                  </div>
+                </NuxtLink>
+              </div>
+            </div>
+
           <!-- materi -->
           <div class="ms-4 mr-2 w-100 pb-2">
-            <div v-for="(file, fIndex) in getFiles(item._id)" :key="fIndex">
-              <div class="file mb-4">
-                <NuxtLink :to="file.link" style="color: black;">
+            <div v-for="(file, index) in item.links" :key="index"
+                class="assignment-item mb-4 ms-4 mr-4">
+                <NuxtLink :to="file.link" style="color: black;" @click="doneMeeting(item._id,file.name)">
                   <div class="file-content mt-2">
                     <v-icon left class="mr-2">{{ getIcon('file') }}</v-icon> {{ file.name }}
                   </div>
                 </NuxtLink>
-                <div v-for="(item2, index2) in item.isFinished" :key="index2">
-                  <v-btn v-if="item2.nameMaterial == file.name"
-                    :class="item2.nameMaterial == file.name ? 'btn-done' : 'btn-mark-done'"
-                    @click="doneMeeting(file.name, item._id)" variant="outlined" style="font-size: 12px;">
-                    {{ item2.nameMaterial == file.name ? 'Selesai' : 'Tandai telah selesai' }}
-                  </v-btn>
+                <div class="d-flex justify-content-end">
+                  <div v-for="(fileFinish, index) in item.isFinished" :key="index">
+                    <v-btn v-if="file.name == fileFinish.materialName "
+                      :class="file.name == fileFinish._id ? 'btn-mark-done' : 'btn-done'"
+                      @click="doneMeeting(item._id, file.name)" variant="outlined" style="font-size: 12px;">
+                      {{ fileFinish.materialName == file.name ? 'Selesai' : 'Tandai telah selesai' }}
+                    </v-btn>
+                  </div>
                 </div>
               </div>
-            </div>
+            <!-- <div v-for="(file, fIndex) in getFiles(item._id)" :key="fIndex">
+              <div class="file mb-4" v-for="(link, index) in item.links" :key="index">
+                <NuxtLink :to="file.link" style="color: black;" @click="doneMeeting(file.name, link.name)">
+                  <div class="mt-2">
+                    <v-icon left class="mr-2">{{ getIcon('file') }}</v-icon> {{ file.name }}
+                  </div>
+                </NuxtLink>
+                <div class="d-flex justify-content-end">
+                  <div v-for="(item2, index2) in item.isFinished" :key="index2">
+                    {{ item2 }}
+                    <v-btn v-if="item2._id == file.name"
+                      :class="item2._id == file.name ? 'btn-done' : 'btn-mark-done'"
+                      @click="doneMeeting(file.name, item._id)" variant="outlined" style="font-size: 12px;">
+                      {{ item2.nameMaterial == file.name ? 'Selesai' : 'Tandai telah selesai' }}
+                    </v-btn>
+                  </div>
+                </div>
+              </div>
+            </div> -->
 
             <!-- tugas -->
             <div v-if="item.assignments.length">
               <div v-for="(assignment, aIndex) in item.assignments" :key="aIndex"
                 class="assignment-item mb-4 ms-4 mr-4">
-                <NuxtLink :to="`/tugas/${assignment._id}`" style="color: black;">
+                <NuxtLink :to="`/tugas/${assignment._id}`" style="color: black;" @click="doneMeetingAssignment(item._id, assignment._id)">
                   <div class="file-content mt-2">
                     <v-icon left class="mr-2">{{ getIcon('task') }}</v-icon> {{ assignment.name }}
                   </div>
                 </NuxtLink>
-                <div>
+                <div class="d-flex justify-content-end">
                   <div v-for="(item3, index3) in item.isFinished" :key="index3">
-                    <v-btn v-if="item3.idAssignment == assignment._id"
-                      :class="item3.idAssignment == assignment._id ? 'btn-done' : 'btn-mark-done'"
+                    <v-btn v-if="item3.assignmentId == assignment._id"
+                      :class="item3.assignmentId == assignment._id ? 'btn-done' : 'btn-mark-done'"
                       @click="doneMeetingAssignment(item._id, assignment._id)" variant="outlined"
                       style="font-size: 12px;">
-                      {{ item3.idAssignment == assignment._id ? 'Selesai' : 'Tandai telah selesai' }}
+                      {{ item3.assignmentId == assignment._id ? 'Selesai' : 'Tandai telah selesai' }}
                     </v-btn>
                   </div>
                 </div>
@@ -97,34 +132,25 @@
             <!-- kuis -->
             <div v-if="item.quizzes.length">
               <div v-for="(kuis, qIndex) in item.quizzes" :key="qIndex" class="assignment-item mb-4 ms-4 mr-4">
-                <NuxtLink :to="`/kuis/${kuis._id}`" style="color: black;">
-                  <div class="file-content mt-2">
+                <NuxtLink :to="`/kuis/${kuis._id}`" style="color: black;" >
+                  <div class="file-content mt-2" @click="doneMeetingQuiz(item._id, kuis._id)">
                     <v-icon left class="mr-2">{{ getIcon('kuis') }}</v-icon> {{ kuis.name }}
                   </div>
                 </NuxtLink>
-                <div>
+                <div class="d-flex justify-content-end">
                   <div v-for="(item4, index4) in item.isFinished" :key="index4">
                     <v-btn v-if="item4.quizId == kuis._id"
                       :class="item4.quizId == kuis._id ? 'btn-done' : 'btn-mark-done'"
                       @click="doneMeetingQuiz(item._id, kuis._id)" variant="outlined"
                       style="font-size: 12px;">
-                      {{ item4.kuisId == kuis._id ? 'Selesai' : 'Tandai telah selesai' }}
+                      {{ item4.quizId == kuis._id ? 'Selesai' : 'Tandai telah selesai' }}
                     </v-btn>
                   </div>
                 </div>
               </div>
             </div>
             
-            <!-- forum -->
-            <div v-if="item.forums.length">
-              <div v-for="(forum, fIndex) in item.forums" :key="fIndex" class="assignment-item mb-4 ms-4 mr-4">
-                <NuxtLink :to="`/forum/${forum.meetingId}-${forum._id}`" style="color: black;">
-                  <div class="file-content mt-2">
-                    <v-icon left class="mr-2">{{ getIcon('forum') }}</v-icon> {{ forum.name }}
-                  </div>
-                </NuxtLink>
-              </div>
-            </div>
+            
           </div>
         </v-row>
       </v-sheet>
@@ -136,12 +162,13 @@
 let token = useCookie('token');
 const route = useRoute();
 
-const doneMeeting = async (name, idPertemuan) => {
+const doneMeeting = async (idPertemuan,name) => {
   const { data: meeting } = await useFetch('/api/done-meeting', {
     headers: {
-      profileToken: token.value, acId: route.params.slug, meetingId: idPertemuan, materialName: name, type: 'materi',
+      profileToken: token.value, acId: route.params.slug, meetingId: idPertemuan, type: 'materi', materialName: name, 
     },
   });
+  console.log(headers);
   console.log(meeting.value);
 };
 
@@ -172,7 +199,6 @@ const desKelas = ref(descCourse.value);
 if (descCourse.value && descCourse.value.length > 0) {
   desKelas.value = descCourse.value[0];
 }
-console.log('Desc Course:', desKelas.value);
 
 //detail kelas
 const { data: course } = await useFetch('/api/get-detailCourse', {
@@ -181,9 +207,9 @@ const { data: course } = await useFetch('/api/get-detailCourse', {
 });
 const detailCourse = ref(course.value);
 console.log(detailCourse.value);
-const getFiles = (id_pertemuan) => {
-  return detailCourse.value.meetings.find(meeting => meeting._id === id_pertemuan)?.links || [];
-};
+// const getFiles = (id_pertemuan) => {
+//   return detailCourse.value.meetings.find(meeting => meeting._id === id_pertemuan)?.links || [];
+// };
 
 //ambil meetings di detail kelas
 const attendance = detailCourse.value.meetings;
@@ -222,10 +248,11 @@ const getIcon = (code) => {
   align-items: center;
 }
 
+/* selesai */
 .btn-mark-done {
   color: green !important;
 }
-
+/* tandai telah selesai */
 .btn-done {
   color: white !important;
   background-color: green !important;

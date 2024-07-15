@@ -9,11 +9,11 @@
     <p class="pl-2 pr-2">{{ dataTugas.description }}</p>
   </v-sheet>
   <div class="ms-1 mr-1">
-        <v-table v-if="dataTugas.finishedAssignment" class="mr-2">
+    <v-table v-if="dataTugas.finishedAssignment" class="mr-2">
           <thead>
             <tr>
               <th class="text-left tabel" style="font-weight: bold;">Status Pengajuan Tugas</th>
-              <th class="tabel"></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -39,16 +39,42 @@
             </tr>
             <tr>
               <td>Komentar pengajuan</td>
-              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar(0)</v-btn></td>
+              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar({{dataTugas.commentAssignment.length}})</v-btn></td>
             </tr>
+            <tr>
+              <td></td>
+              <td>
+                <v-sheet rounded class="ms-2 mr-2 pt-4">
+                  <div v-if="showComment">
+                    <v-textarea label="Tambahkan komentar" v-model="commentContent"></v-textarea>
+                    <div class="d-flex justify-end">
+                      <v-btn class="mr-2 button" @click="saveComment">SIMPAN</v-btn>
+                      <v-btn @click="toggleComment" color="red">BATAL</v-btn>
+                    </div>
+                  </div>
+                  <div v-if="dataTugas.commentAssignment" class="mt-2">
+                    <v-row v-for="(komen, index) in dataTugas.commentAssignment" :key="index">
+                      <v-col class="mr-2 pt-0 mt-2">
+                        <v-card elevation="10" class=" mr-2" style="width: 400px; border: 2px solid var(--purple)">
+                          <div class="ms-2 mr-2 mt-2 mb-2">
+                            {{ komen.studentName }} - {{ formattedDate(komen.createdAt) }}<br> {{ komen.content }}
+                          </div>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </div>
+                  <br>
+                </v-sheet>
+              </td>
+            </tr> 
           </tbody>
-        </v-table>
+    </v-table>
 
         <v-table v-else class="mr-2">
           <thead>
             <tr>
               <th class="text-left tabel" style="font-weight: bold;">Status Pengajuan Tugas</th>
-              <th class="tabel" ></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -62,7 +88,7 @@
             </tr>
             <tr>
               <td>Waktu tersisa</td>
-              <td>: {{ remainingTime }}</td>
+              <td v-if="dataTugas.isSubmitting == true">: {{ remainingTime }}</td> <td v-else><span style="color: red;">: Terlambat {{ remainingTime }}</span></td>
             </tr>
             <tr>
               <td>Terakhir diubah</td>
@@ -74,33 +100,39 @@
             </tr>
             <tr>
               <td>Komentar pengajuan</td>
-              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar(0)</v-btn></td>
+              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar({{dataTugas.commentAssignment.length}})</v-btn></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <v-sheet rounded class="ms-2 mr-2 pt-4">
+                  <div v-if="dataTugas.commentAssignment">
+                    <v-row v-for="(komen, index) in dataTugas.commentAssignment" :key="index">
+                      <v-col class="mr-2 pt-0 mt-2">
+                        <v-card elevation="10" class=" mr-2" style="width: 400px; border: 2px solid var(--purple)">
+                          <v-card-subtitle>
+                            {{ komen.studentName }} - {{ formattedDate(komen.createdAt) }}<br> {{ komen.content }}
+                          </v-card-subtitle>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </div>
+                  <br>
+                  <div v-if="showComment">
+                    <v-textarea label="Tambahkan komentar" v-model="commentContent"></v-textarea>
+                    <div class="d-flex justify-end">
+                      <v-btn class="mr-2 button" @click="saveComment">SIMPAN</v-btn>
+                      <v-btn @click="toggleComment" color="red">BATAL</v-btn>
+                    </div>
+                  </div>
+                </v-sheet>
+              </td>
             </tr>
           </tbody>
         </v-table>
 
-    <v-sheet rounded class="ms-2 mr-2 pt-4">
-      <div v-if="dataTugas.commentAssignment">
-        <v-row v-for="(komen, index) in dataTugas.commentAssignment" :key="index">
-          <v-col class="mr-2 pt-0 mt-2">
-            <v-card color="var(--yellow)" class=" mr-2" style="width: 400px;">
-              <v-card-subtitle>
-                {{ komen.studentName }} - {{ formattedDate(komen.timestamp) }} <br> {{ komen.content }}
-              </v-card-subtitle>
-            </v-card>
-          </v-col>
-        </v-row>
-      </div>
-      <br>
-      <div v-if="showComment">
-        <v-textarea label="Tambahkan komentar" v-model="commentContent"></v-textarea>
-        <div class="d-flex justify-end">
-          <v-btn class="mr-2 button" @click="saveComment">SIMPAN</v-btn>
-          <v-btn @click="toggleComment" color="red">BATAL</v-btn>
-        </div>
-      </div>
-    </v-sheet>
-    <div class="button-container" v-if="!showUploadForm && !dataTugas.isSubmitting">
+    
+    <div class="button-container" v-if="!showUploadForm && !dataTugas.finishedAssignment && dataTugas.isSubmitting == true">
       <v-btn class="button pa-2 mr-2 ml-2" @click="toggleUploadForm" rounded="lg">Kumpulkan Tugas</v-btn>
     </div>
   </div>
@@ -117,7 +149,6 @@
       </v-sheet>
 
       <v-sheet v-if="uploadedFiles.length > 0" class="mt-4 mr-4" color="var(--grey)">
-        <!-- <v-btn size="small" color="#612D81" icon="mdi-file" variant="text" @click="triggerFileInput"></v-btn> -->
         <div class="ms-2 pt-2 pb-2">
           <p>Files yang diunggah:</p>
           <ul>
@@ -135,7 +166,12 @@
       </v-sheet>
     </div>
     <br>
-    <p>Jenis tugas yang diterima: <br> pdf</p>
+    <p>Jenis tugas yang diterima:</p>
+    <div v-for="(type, index) in dataTugas.fileType" :key="index">
+      <ul>
+        <li class="">- {{ type }}</li>
+      </ul>
+    </div>
   </div>
 
   <div v-if="showUploadForm" class="text-center mt-16">
@@ -146,10 +182,11 @@
 <script setup>
 import { format, differenceInMilliseconds } from 'date-fns';
 import { id } from 'date-fns/locale';
+import Swal from 'sweetalert2';
 
-const { $swal } = useNuxtApp();
 
 let token = useCookie('token');
+
 const { data: assignment } = await useFetch('/api/detailAssignment', {
   method: 'POST',
   body: JSON.stringify({ profileToken: token.value, id: useRoute().params.slug })
@@ -158,7 +195,6 @@ const { data: assignment } = await useFetch('/api/detailAssignment', {
 const dataTugas = ref(assignment.value);
 
 const finishSubmit = dataTugas.value.finishedAssignment;
-console.log(finishSubmit);
 
 const formattedDate = (dateString) => {
   try {
@@ -170,6 +206,10 @@ const formattedDate = (dateString) => {
   }
 };
 
+const formatDate = (date) => {
+  return format(new Date(date), 'EEEE, d MMMM yyyy', { locale: id });
+};
+
 const commentContent = ref('');
 const showComment = ref(false);
 
@@ -178,7 +218,6 @@ const toggleComment = () => {
 };
 
 const saveComment = async () => {
-  console.log(commentContent.value)
   try {
     const response = await fetch('/api/save-comment-tugas', {
       method: 'POST',
@@ -190,11 +229,16 @@ const saveComment = async () => {
         content: commentContent.value,
       }),
     });
-    console.log(response)
     if (response.ok) {
       const savedComment = await response.json();
       dataTugas.value.commentAssignment.push(savedComment);
-      console.log('Saved comment:', savedComment);
+      Swal.fire({
+        title: 'Berhasil',
+        text: 'Berhasil tambah komentar',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      })
+      window.location.reload();
       toggleComment();
     } else {
       console.error('Failed to save comment:', response.status);
@@ -217,21 +261,32 @@ const triggerFileInput = () => {
   fileInput.value.click();
 };
 
+
 const handleFileChange = (event) => {
-  let file = event.target.files[0];
-  console.log(file);
-  if (file) {
-    const reader = new FileReader();
-    reader.addEventListener('load', function () {
-      fileInput = reader.result;
-      uploadedFiles.value.push({ nama: file.name, src: fileInput, file: file });
-      console.log(uploadedFiles.value)
-    });
-    reader.readAsDataURL(file);
-  } else {
-    this.$('file').attr('src', '#');
+  let files = event.target.files;
+  uploadedFiles.value = [];
+
+  for (let i = 0; i < files.length; i++) {
+    let file = files[i];
+    const fileType = '.' + file.name.split('.').pop().toLowerCase();
+    
+    if (dataTugas.value.fileType.includes(fileType)) {
+      const reader = new FileReader();
+      reader.addEventListener('load', function () {
+        fileInput = reader.result;
+        uploadedFiles.value.push({ nama: file.name, src: fileInput, file: file });
+      });
+      reader.readAsDataURL(file);
+    } else {
+      Swal.fire({
+        title: 'Jenis Berkas Tidak Diterima',
+        text: `Berkas dengan jenis ${fileType} tidak diterima. Jenis berkas yang diterima: ${dataTugas.value.fileType.join(', ')}`,
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
   }
-};
+}; 
 
 const submitTugas = async (link) => {
   const response = await fetch('/api/submit-tugas', {
@@ -247,22 +302,35 @@ const submitTugas = async (link) => {
       meetingId: dataTugas.value.meetingId,
       link
     }),
-  })
+  });
+  if(response.status == 200){
+    Swal.fire({
+      title: 'Berhasil',
+      text: 'Berhasil mengumpulkan tugas',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    })
+    window.location.reload();
+  }else{
+    Swal.fire({
+      title: 'Gagal',
+      text: data.value.message ?? 'Gagal mengumpulkan tugas',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    })
+  }
 };
 
 
 const uploadFile = async (uploadData) => {
-  console.log(uploadData);
   const form = new FormData();
   form.append('file', uploadData.file);
   form.append('name', uploadData.name);
-  console.log(form);
   const response = await fetch('/api/upload', {
     method: 'POST',
     body: form,
   });
   const result = await response.json();
-  console.log(result);
   return result.url;
 };
 
@@ -271,17 +339,13 @@ const saveFile = async () => {
     try {
       const randomString = Math.random().toString(36).substring(2, 15);
       const uploadPromises = uploadedFiles.value.map((item, index) => {
-        const fileKey = `${randomString}/${item.nama.split(".")[0]}-file${index}.pdf`;
+        const fileExtension = item.nama.split('.').pop();
+        const fileKey = `${randomString}/${item.nama.split(".")[0]}-file${index}.${fileExtension}`;
         const file = item;
-        console.log(fileKey)
-        console.log(item);
-        console.log(file.nama);
         return uploadFile({ file: file.file, name: fileKey });
       });
 
       const uploadedFileResults = await Promise.all(uploadPromises);
-
-      alert(`File(s) ${uploadedFileResults.map(file => file.name).join(', ')} disimpan`);
       submitTugas(uploadedFileResults);
       showUploadForm.value = false;
     } catch (error) {

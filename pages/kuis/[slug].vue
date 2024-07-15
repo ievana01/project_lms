@@ -33,6 +33,8 @@
 <script setup>
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
+import Swal from 'sweetalert2';
+
 
 const formattedDate = (dateString) => {
     try {
@@ -50,14 +52,12 @@ const { data: kuis } = await useFetch('/api/detailQuiz', {
     body: JSON.stringify({ profileToken: token.value, id: useRoute().params.slug })
 });
 const detailKuis = ref();
-detailKuis.value = kuis.value;
-console.log(detailKuis);
+detailKuis.value = kuis.value;;
 
-const { $swal } = useNuxtApp()
 
 const router = useRouter();
 const confirmQuiz = () => {
-$swal.fire({
+Swal.fire({
     title : 'Apakah anda yakin memulai kuis?',
     text: 'Setelah kuis dimulai, jangan melakukan refresh atau kembali ke halaman sebelummnya, karena tindakan tersebut akan dianggap telah menyelesaikan kuis!',
     icon: 'question', 

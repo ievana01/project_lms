@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
-  console.log('grade', body);
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
@@ -13,11 +12,9 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  console.log('grade', response);
 
   if (response.ok) {
     const getGrade = await response.json();
-    console.log('Submit:', getGrade);
     return getGrade;
   } else {
     console.error('Failed to get grade:', response.statusText);

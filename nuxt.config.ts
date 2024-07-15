@@ -19,17 +19,17 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/i18n',
   ],
-  i18n: {
-    // Module Options
-    lazy: true,
-    langDir: "locales",
-    strategy: "prefix_except_default",
-    defaultLocale: "id", // Default Language
-    locales: [
-      { code: "id", iso: "id-ID", file: "id.json" },
-      { code: "en", iso: "en-US", file: "en.json" },
-    ],
-  },
+  // i18n: {
+  //   // Module Options
+  //   lazy: true,
+  //   langDir: "locales",
+  //   strategy: "prefix_except_default",
+  //   defaultLocale: "id", // Default Language
+  //   locales: [
+  //     { code: "id-ID", iso: "id-ID", name: "English(US)", file: "id-ID.json" },
+  //     { code: "en-US", iso: "en-US", name : "Indonesia", file: "en-US.json" },
+  //   ],
+  // },
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },

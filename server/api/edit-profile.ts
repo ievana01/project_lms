@@ -3,7 +3,6 @@ export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
-  console.log('edit', body);
   
   const response = await fetch(`${runtimeConfig.URL2}/imavi/users/edit-profile`, {
     method: 'POST',
@@ -20,8 +19,6 @@ export default defineEventHandler(async (event) => {
       password: body.password,
     }), 
   });
-  console.log('edit', response);
-  
   if (response.ok) {
     const addForum = await response.json();
     return addForum;

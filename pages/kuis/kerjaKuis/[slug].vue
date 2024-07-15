@@ -113,13 +113,11 @@ detailKuis.value = kuis.value;
 const saveAnswer = (index, answer) => {
   const thisQuestions = detailSoal.value[index];
   thisQuestions.answer = answer;
-  console.log(detailSoal);
 };
 
 const clickedIcons = ref(detailSoal.value.map(() => false));
 const iconClick = (index) => {
   clickedIcons.value[index] = !clickedIcons.value[index];
-  console.log(clickedIcons.value[index]);
 };
 
 
@@ -141,7 +139,6 @@ const submitKuis = async () => {
       answers: answer
     }),
   });
-  console.log(response);
   if(response.status == 200){
     alert('Kuis berhasil dikumpulkan');
     router.push(`/kuis/${useRoute().params.slug}`);

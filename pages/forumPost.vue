@@ -25,6 +25,5 @@ const { data: forum } = await useFetch('/api/get-forum-post', {
 });
 
 const dataForum = ref(forum.value);
-console.log(dataForum.value);
 </script>
 <style></style>

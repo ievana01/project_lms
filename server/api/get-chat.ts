@@ -1,7 +1,5 @@
 export default defineEventHandler(async (event) => {
-  let body = await readBody(event);
-  console.log('pesan', body);
-  
+  let body = await readBody(event); 
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;

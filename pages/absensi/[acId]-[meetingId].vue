@@ -31,6 +31,7 @@
 <script setup>
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
+import Swal from 'sweetalert2';
 
 const formattedDate = (dateString) => {
     try {
@@ -41,7 +42,6 @@ const formattedDate = (dateString) => {
         return 'Invalid date';
     }
 };
-
 let token = useCookie('token');
 const route = useRoute();
 
@@ -72,10 +72,21 @@ const submitAttendance = async () => {
         }),
     });
     if(response.status == 200){
-        alert('Berhasil melakukan presensi');
-        router.push(`/kelas/${useRoute().params.acId}`);
+        Swal.fire({
+            title: 'Berhasil',
+            text: 'Berhasil melakukan presensi',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(() => {
+            router.push(`/kelas/${useRoute().params.acId}`);
+        })
     }else{
-        alert('gagal melakukan presensi')
+        Swal.fire({
+        title: 'Gagal',
+        text: data.value.message ?? 'Gagal melakukan presensi',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     }
 };
 </script>

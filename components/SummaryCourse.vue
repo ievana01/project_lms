@@ -1,7 +1,7 @@
 <template>
   <v-container class="ms-0">
     <v-row class="list-card">
-      <v-col v-if=kelas.length>0 v-for="(kelas, index) in kelas" :key="index">
+      <v-col v-if=kelas.length v-for="(kelas, index) in kelas" :key="index">
         <NuxtLink :to="`/kelas/${kelas.acId}`">
           <v-card style="background-color: #F5F5F5;">
             <v-img src="/public/img/course.jpg" style="height: 100px; width: 250px;" class="mt-4"></v-img>
@@ -41,7 +41,8 @@ const { data: descCourse } = await useFetch('/api/deskCourse', {
 const desKelas = ref(descCourse.value);
 if (descCourse.value && descCourse.value.length > 0) {
   desKelas.value = descCourse.value[0];
-}
+};
+console.log(desKelas);
 </script>
 
 <style></style>

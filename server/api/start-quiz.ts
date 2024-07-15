@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
-  console.log('start', body);
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
@@ -13,10 +12,8 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  console.log('start', response);
   if (response.ok) {
     const startQuiz = await response.json();
-    console.log('start:', startQuiz);
     return startQuiz;
   } else {
     console.error('Failed to start quiz:', response.statusText);

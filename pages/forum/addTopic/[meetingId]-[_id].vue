@@ -13,6 +13,8 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
+
 const router = useRouter();
 
 const token = useCookie('token');
@@ -45,10 +47,21 @@ const addForum = async () => {
     });
 
     if (response.ok) {
-      alert('Berhasil menambahkan topik baru')
-      router.push(`/forum/${meetingId.value}-${forumId.value}`);
+      Swal.fire({
+        title: 'Berhasil',
+        text: 'Berhasil menambahkan topik baru',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        router.push(`/forum/${meetingId.value}-${forumId.value}`)
+      });
     } else {
-      alert('Gagal menambahkan topik')
+      Swal.fire({
+        title: 'Gagal',
+        text: data.value.message ?? 'Gagal tambah topik',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     }
   } catch (error) {
     console.error('Error saving forum:', error);

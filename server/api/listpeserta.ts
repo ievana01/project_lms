@@ -12,10 +12,8 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  console.log('peserta', response)
   if (response.ok) {
     const listPeserta = await response.json();
-    console.log('peserta', listPeserta)
     return listPeserta;
   } else {
     return { error: 'Unable to fetch list peserta' };

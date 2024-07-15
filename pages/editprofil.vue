@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
 const token = useCookie('token');
 const { data: profile } = await useFetch('/api/profile', {
   headers: {
@@ -31,10 +32,11 @@ const profileApi = profile.value;
 const newPassword = ref('');
 const phoneNumber = ref('');
 const description = ref('');
+const router = useRouter();
+
 
 const updateProfile = async () => {
   try {
-    console.log(profileApi.phoneNumber);
     const response = await fetch('/api/edit-profile', {
       method: 'POST',
       headers: {
@@ -50,10 +52,21 @@ const updateProfile = async () => {
 
     if (response.ok) {
       const editProfile = await response.json();
-      console.log(editProfile);
-      alert('Profil berhasil diubah');
+      Swal.fire({
+        title: 'Berhasil',
+        text: 'Profil berhasil diubah',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        router.push('/profile')
+      })
     } else {
-      console.error('Failed to edit profile:', response.statusText);
+      Swal.fire({
+        title: 'Gagal',
+        text: data.value.message ?? 'Gagal ubah profil',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     }
   } catch (error) {
     console.error('Error', error);

@@ -14,8 +14,6 @@ export default defineEventHandler(async (event) => {
 
   if (response.ok) {
     const activity = await response.json();
-    console.log('activity', activity);
-    
     return activity;
   } else {
     throw new Error('Failed to add activity');

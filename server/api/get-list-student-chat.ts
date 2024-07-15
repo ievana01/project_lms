@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  // console.log(response);
   
   if (response.ok) {
     const dataUserChat = await response.json();

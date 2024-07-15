@@ -28,6 +28,8 @@
 <script setup>
 import { constructNow, format } from 'date-fns';
 import { id } from 'date-fns/locale';
+import Swal from 'sweetalert2';
+
 const router = useRouter();
 
 const selectedDate = ref(null);
@@ -59,6 +61,7 @@ const formatDateApi = (date) => {
   return format(new Date(date), 'MM/dd/yyyy HH:mm:ss');
 };
 
+
 const addEvent = async () => {
   try {
     const response = await fetch('/api/add-event', {
@@ -76,8 +79,21 @@ const addEvent = async () => {
     if (response.status == 200) {
       const tambahEvent = await response.json();
       dataEvent.value.push(tambahEvent);
-      alert('Berhasil menambahkan event')
-      router.push('/calendar')
+      Swal.fire({
+            title: 'Berhasil',
+            text: 'Berhasil menambahkan event',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(() => {
+          router.push('/calendar')
+        })
+    }else{
+      Swal.fire({
+        title: 'Gagal',
+        text: data.value.message ?? 'Gagal menambahkan event',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     } 
   } catch (error) {
     console.error('Error saving event:', error);

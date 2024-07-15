@@ -8,7 +8,7 @@
         <v-btn class="ma-2" size="x-small" color="#612D81" icon="mdi-account" variant="outlined" to="/profile"></v-btn>
         <v-btn class="ma-2" size="x-small" color="#612D81" icon="mdi-chat" variant="outlined" to="/chat"></v-btn>
         <v-btn class="ma-2" size="x-small" color="#612D81" icon="mdi-bell" variant="outlined" to="/notifikasi"></v-btn>
-        <v-btn class="ma-2" size="x-small" color="#612D81" icon="mdi-translate" variant="outlined"></v-btn>
+        <!-- <v-btn class="ma-2" size="x-small" color="#612D81" icon="mdi-translate" variant="outlined"></v-btn> -->
       </div>
     </v-app-bar>
 
@@ -19,7 +19,7 @@
           <h6>Dasbor</h6>
         </v-list-item>
 
-        <v-list-item link to="">
+        <v-list-item>
           <h6>Kursus Saya</h6>
         </v-list-item>
         <div v-if="dataCourse && dataCourse.length">

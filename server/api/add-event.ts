@@ -1,7 +1,6 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event);
   const runtimeConfig = useRuntimeConfig();
-  console.log(runtimeConfig)
   const cookies = parseCookies(event);
   const token = cookies.token;
   const response = await fetch(`${runtimeConfig.URL2}/imavi/events/create`, {

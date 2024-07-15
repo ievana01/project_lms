@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
   let body = await readBody(event)
-  console.log('forum', body);
   const runtimeConfig = useRuntimeConfig();
   const cookies = parseCookies(event);
   const token = cookies.token;
@@ -13,10 +12,8 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${token}`,
     },
   });
-  console.log(response)
   if (response.ok) {
     const detailForum = await response.json();
-    console.log('ini detail forum', detailForum)
     return detailForum;
   } else {
     return { error: 'Unable to detail forum' };

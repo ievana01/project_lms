@@ -19,8 +19,8 @@
                 <div v-if="activeReply === 'main'">
                     <v-textarea label="Tambahkan komentar" v-model="isiKomen"></v-textarea>
                     <div class="d-flex justify-end">
-                        <v-btn class="mr-2" @click="saveKomen">SIMPAN</v-btn>
-                        <v-btn @click="toggleReply('main')">BATAL</v-btn>
+                        <v-btn class="button mr-2" @click="saveKomen">SIMPAN</v-btn>
+                        <v-btn @click="toggleReply('main')" color="red">BATAL</v-btn>
                     </div>
                 </div>
             </div>
@@ -43,8 +43,8 @@
                 <div v-if="activeReply === index">
                     <v-textarea label="Tambahkan komentar" v-model="isiReply"></v-textarea>
                     <div class="d-flex justify-end">
-                        <v-btn class="mr-2" @click="saveReply(forum.topicId, forum._id)">SIMPAN</v-btn>
-                        <v-btn @click="toggleReply(index)">BATAL</v-btn>
+                        <v-btn class="mr-2 button" @click="saveReply(forum.topicId, forum._id)">SIMPAN</v-btn>
+                        <v-btn @click="toggleReply(index)" color="red">BATAL</v-btn>
                     </div>
                 </div>
 
@@ -60,6 +60,8 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
+
 let token = useCookie('token');
 const { data: forum } = await useFetch('/api/get-detail-forum', {
     method: 'POST',
@@ -67,7 +69,6 @@ const { data: forum } = await useFetch('/api/get-detail-forum', {
 });
 
 const detailForum = ref(forum.value);
-console.log(detailForum.value);
 
 const activeReply = ref(null);
 
@@ -82,7 +83,6 @@ const toggleReply = (index) => {
 const isiKomen = ref('');
 
 const saveKomen = async () => {
-    console.log(isiKomen.value)
     try {
         const response = await fetch('/api/save-comment-forum', {
             method: 'POST',
@@ -91,16 +91,26 @@ const saveKomen = async () => {
             },
             body: JSON.stringify({
                 id: detailForum.value._id,
-                content: isiReply.value,
+                content: isiKomen.value,
             }),
         });
-        console.log(response)
         if (response.ok) {
             const savedComment = await response.json();
             detailForum.value.dataComment.push(savedComment);
-            console.log('Saved comment:', savedComment);
+            Swal.fire({
+                title: 'Berhasil',
+                text: 'Berhasil menambahkan komentar',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            })
+            window.location.reload();
         } else {
-            console.error('Failed to save comment:', response.status);
+            Swal.fire({
+                title: 'Gagal',
+                text: data.value.message ?? 'Gagal tambah komentar',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
         }
     } catch (error) {
         console.error('Error saving comment:', error);
@@ -111,7 +121,6 @@ const saveKomen = async () => {
 const isiReply = ref('');
 
 const saveReply = async (idTopic, idComment) => {
-    console.log(isiReply.value)
     try {
         const response = await fetch('/api/save-reply', {
             method: 'POST',
@@ -124,14 +133,23 @@ const saveReply = async (idTopic, idComment) => {
                 content: isiReply.value,
             }),
         });
-        console.log(response)
         if (response.ok) {
             const savedReply = await response.json();
-            // detailForum.value.dataReply.push(savedReply);
             detailForum.value.dataComment.find(comment => comment._id === idComment).dataReply.push(savedReply);
-            console.log('Saved reply:', savedReply);
+            Swal.fire({
+                title: 'Berhasil',
+                text: 'Berhasil reply',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            })
+            window.location.reload();
         } else {
-            console.error('Failed to save reply:', response.status);
+            Swal.fire({
+                title: 'Gagal',
+                text: data.value.message ?? 'Gagal reply',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
         }
     } catch (error) {
         console.error('Error saving reply:', error);

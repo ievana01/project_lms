@@ -38,17 +38,22 @@
       <v-col cols="12" md="6">
         <v-card class="pa-4" elevation="20">
           <v-card-text>
-            <div v-for="(event, index) in dataEvent" :key="index">
-              <v-card class="mb-2" rounded elevation="20" :color="event.category === 'acara kelas' ? 'red-accent-3' : event.category === 'acara pengguna' ? 'blue-accent-3' : ''">
-                <v-card-text>
-                  <div class="ms-2 mr-2 pt-1">
-                    <h6>{{ event.name }}</h6>
-                    <p>Tanggal: {{ formattedDate(event.date) }}</p>
-                    <p>Kategori: {{ event.category }}</p>
-                    <p v-if="event.acName">Kelas : {{ event.acName }}</p>
-                  </div>
-                </v-card-text>
-              </v-card>
+            <div v-if="dataEvent">
+              <div v-for="(event, index) in filteredDataEvent" :key="index">
+                <v-card class="mb-2" rounded elevation="20" :color="event.category === 'acara kelas' ? 'red-accent-3' : event.category === 'acara pengguna' ? 'blue-accent-3' : ''">
+                  <v-card-text>
+                    <div class="ms-2 mr-2 pt-1">
+                      <h6>{{ event.name }}</h6>
+                      <p>Tanggal: {{ formattedDate(event.date) }}</p>
+                      <p>Kategori: {{ event.category }}</p>
+                      <p v-if="event.acName">Kelas : {{ event.acName }}</p>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </div>
+            </div>
+            <div v-else>
+              <p>Tidak event tersedia</p>
             </div>
           </v-card-text>
         </v-card>
@@ -84,39 +89,43 @@ const formattedDate = (dateString) => {
 };
 
 const events = ref([]);
-
-      const colors= [
-        'red-accent-3',
-        'blue-accent-3'
-      ];
-
+const colors= ['red-accent-3','blue-accent-3'];
 
 const fetchEvents = ({ start, end }) => {
-        const event = []
-        const data = dataEvent.value;
-        for (let i = 0; i < data.length; i++) {
-          const first = new Date(data[i].date)
-          const second = new Date(data[i].date)
-          console.log(first, second);
+  const event = []
+  const data = dataEvent.value;
+  for (let i = 0; i < data.length; i++) {
+    const first = new Date(data[i].date)
+    const second = new Date(data[i].date)
+    console.log(first, second);
 
-          event.push({
-            title: "",
-            start: first,
-            end: second,
-            color: data[i].category =='acara kelas' ? colors[0] : colors[1],
-            allDay: false,
-          })
-        }
-        events.value = event;
-        console.log(events.value);
-      }
+    event.push({
+      title: "",
+      start: first,
+      end: second,
+      color: data[i].category =='acara kelas' ? colors[0] : colors[1],
+      allDay: false,
+    })
+  }
+  events.value = event;
+};
+
+const filteredDataEvent = computed(() => {
+  const adapter = useDate();
+  const startOfMonth = adapter.startOfMonth(new Date());
+  const endOfMonth = adapter.endOfMonth(new Date());
+  return dataEvent.value.filter(event => {
+    const eventDate = new Date(event.date);
+    return eventDate >= startOfMonth && eventDate <= endOfMonth;
+  });
+});
 
 onMounted(() =>{
   const adapter = useDate()
-      fetchEvents({
-        start: adapter.startOfDay(adapter.startOfMonth(new Date())),
-        end: adapter.endOfDay(adapter.endOfMonth(new Date())),
-      })
+    fetchEvents({
+      start: adapter.startOfDay(adapter.startOfMonth(new Date())),
+      end: adapter.endOfDay(adapter.endOfMonth(new Date())),
+    });
 });
 </script>
 

@@ -1,87 +1,124 @@
-<template>
-  <v-app-bar :elevation="0" class="pt-2 pb-2">
-    <div class="">
-      <img class="logo-panjang ml-4" src="public/img/logopanjang.png" alt="">
-    </div>
-    <div class="icon ml-auto pr-2">
-      <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-account" variant="outlined" to="/profile"></v-btn>
-      <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-chat" variant="outlined" to="/chat"></v-btn>
-      <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-bell" variant="outlined" to="/notifikasi"></v-btn>
-      <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-translate" variant="outlined"></v-btn>
-    </div>
-  </v-app-bar>
-  <div class="pt-2">
-    <v-navigation-drawer location="left" temporary color="#612D81" style="width: 180px; height: auto" permanent
-      :rounded="false" class="mt-4">
-      <v-list density="compact" nav>
-        <v-list-item link to="/dasbor">
-          <h6>Dasbor</h6>
-        </v-list-item>
+  <template>
+    <v-app-bar :elevation="0" class="pt-2 pb-2">
+      <div class="">
+        <img class="logo-panjang ml-4" src="public/img/logopanjang.png" alt="">
+      </div>
+      <div class="icon ml-auto pr-2">
+        <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-account" variant="outlined" to="/profile"></v-btn>
+        <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-chat" variant="outlined" to="/chat"></v-btn>
+        <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-bell" variant="outlined" to="/notifikasi"></v-btn>
+        <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-translate" variant="outlined" @click="translatePage">
 
-        <v-list-item link to="">
-          <h6>Kursus Saya</h6>
-        </v-list-item>
-        <div v-if="dataCourse && dataCourse.length">
-          <v-list-item v-for="(course, index) in dataCourse" :key="index" link :to="`/kelas/${course.acId}`">
-            <li class="font-li">{{ course.courseName }}</li>
+        </v-btn>
+      </div>
+    </v-app-bar>
+    <div class="pt-2">
+      <v-navigation-drawer location="left" temporary color="#612D81" style="width: 180px; height: auto" permanent
+        :rounded="false" class="mt-4">
+        <v-list density="compact" nav>
+          <v-list-item link to="/dasbor">
+            <h6>Dasbor</h6>
           </v-list-item>
-        </div>
 
-        <v-list-item link to="/nilai">
-          <h6>Nilai</h6>
-        </v-list-item>
-        <v-list-item link to="/listTugas">
-          <h6>Tugas</h6>
-        </v-list-item>
-        <v-list-item link to="/calendar">
-          <h6>Kalendar</h6>
-        </v-list-item>
-        <v-list-item link @click="logout">
-          <h6>Keluar</h6>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-  </div>
-</template>
+          <v-list-item>
+            <h6>Kursus Saya</h6>
+          </v-list-item>
+          <div v-if="dataCourse && dataCourse.length">
+            <v-list-item v-for="(course, index) in dataCourse" :key="index" link :to="`/kelas/${course.acId}`">
+              <li class="font-li">{{ course.courseName }}</li>
+            </v-list-item>
+          </div>
 
-<script setup>
-let token = useCookie('token');
-const { data: course } = await useFetch('/api/course', {
-  method: 'POST',
-  body: JSON.stringify({ profileToken: token.value })
-});
+          <v-list-item link to="/nilai">
+            <h6>Nilai</h6>
+          </v-list-item>
+          <v-list-item link to="/listTugas">
+            <h6>Tugas</h6>
+          </v-list-item>
+          <v-list-item link to="/calendar">
+            <h6>Kalendar</h6>
+          </v-list-item>
+          <v-list-item link @click="logout">
+            <h6>Keluar</h6>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+    </div>
+  </template>
 
-const dataCourse = ref(course.value || []);
+  <script setup>
+  let token = useCookie('token');
+  const { data: course } = await useFetch('/api/course', {
+    method: 'POST',
+    body: JSON.stringify({ profileToken: token.value })
+  });
 
-const logout = async () => {
+  const dataCourse = ref(course.value || []);
+
+  const logout = async () => {
+    try {
+      const { data: logoutResponse } = await useFetch('/api/logout', {
+        method: 'POST',
+        body: JSON.stringify({ profileToken: token.value })
+      });
+      console.log(logoutResponse)
+      if (logoutResponse.value.status == 200) {
+
+        token.value = null;
+        console.log(token.value)
+        navigateTo('/login')
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
+  const loadGoogleTranslateScript = () => {
+  return new Promise((resolve, reject) => {
+    if (document.getElementById('google-translate-script')) {
+      resolve()
+      return
+    }
+    const script = document.createElement('script')
+    script.id = 'google-translate-script'
+    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
+    script.onload = resolve
+    script.onerror = reject
+    document.body.appendChild(script)
+  })
+}
+
+const translatePage = async () => {
   try {
-    const { data: logoutResponse } = await useFetch('/api/logout', {
-      method: 'POST',
-      body: JSON.stringify({ profileToken: token.value })
-    });
-    console.log(logoutResponse)
-    if (logoutResponse.value.status == 200) {
-
-      token.value = null;
-      console.log(token.value)
-      navigateTo('/login')
+    await loadGoogleTranslateScript()
+    if (window.googleTranslateElementInit) {
+      window.googleTranslateElementInit()
     } else {
-      console.error('Logout failed');
+      window.googleTranslateElementInit = () => {
+        new window.google.translate.TranslateElement({
+          pageLanguage: '',
+          includedLanguages: 'en',
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        }, 'google_translate_element')
+      }
     }
   } catch (error) {
-    console.error('Error during logout:', error);
+    console.error('Failed to load Google Translate script:', error)
   }
-};
+}
 </script>
 
-<style>
-.set-foto-header {
-  width: 133px;
-  height: 39px;
-}
+  <style>
+  .set-foto-header {
+    width: 133px;
+    height: 39px;
+  }
 
-.icon {
-  display: flex;
-  justify-content: flex-end;
-}
-</style>
+  .icon {
+    display: flex;
+    justify-content: flex-end;
+  }
+  </style>

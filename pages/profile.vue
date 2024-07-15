@@ -139,9 +139,7 @@ const { data: profile } = await useFetch('/api/profile', {
 
 const profileApi = ref();
 profileApi.value = profile.value;
-console.log(profileApi);
 const access = profileApi.value.access;
-console.log(access);
 
 const { data: course } = await useFetch('/api/course', {
   method: 'POST',
