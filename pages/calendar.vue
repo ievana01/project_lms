@@ -9,7 +9,6 @@
               <v-list-item>
                 <v-list-item-title>
                   <div class="d-flex">
-                    <!-- <li class="font-li">Acara Kelas</li> -->
                     <v-sheet class="bg-purple-accent-1 mr-4" width="20" height="20" rounded="xl"></v-sheet>
                     <p>Acara Kelas</p>
                   </div>
@@ -18,7 +17,6 @@
               <v-list-item>
                 <v-list-item-title>
                   <div class="d-flex">
-                    <!-- <li class="font-li">Acara Pengguna</li> -->
                     <v-sheet class="bg-light-blue-accent-3 mr-4" width="20" height="20" rounded="xl"></v-sheet>
                     <p>Acara Pengguna</p>
                   </div>
@@ -104,7 +102,7 @@ const fetchEvents = ({ start, end }) => {
   for (let i = 0; i < data.length; i++) {
     const first = new Date(data[i].date)
     const second = new Date(data[i].date)
-    console.log(first, second);
+    // console.log(first, second);
 
     event.push({
       title: "",

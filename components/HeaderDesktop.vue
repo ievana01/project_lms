@@ -61,12 +61,9 @@
         method: 'POST',
         body: JSON.stringify({ profileToken: token.value })
       });
-      console.log(logoutResponse)
       if (logoutResponse.value.status == 200) {
-
         token.value = null;
         userId.value = null;
-        console.log(token.value)
         Swal.fire({
         title: 'Berhasil',
         text: 'Sukses Logout',

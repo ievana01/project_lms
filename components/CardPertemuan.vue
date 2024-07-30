@@ -177,7 +177,6 @@ const doneMeeting = async (idPertemuan,name) => {
       profileToken: token.value, acId: route.params.slug, meetingId: idPertemuan, type: 'materi', materialName: name, 
     },
   });
-  console.log(meeting.value);
 };
 
 const doneMeetingAssignment = async (idPertemuan, assignmentId) => {
@@ -186,7 +185,6 @@ const doneMeetingAssignment = async (idPertemuan, assignmentId) => {
       profileToken: token.value, acId: route.params.slug, meetingId: idPertemuan, assignmentId: assignmentId, type: 'tugas',
     },
   });
-  console.log(assignment.value);
 };
 
 const doneMeetingQuiz = async (idPertemuan, quizId) => {
@@ -195,7 +193,6 @@ const doneMeetingQuiz = async (idPertemuan, quizId) => {
       profileToken: token.value, acId: route.params.slug, meetingId: idPertemuan, quizId: quizId, type: 'kuis',
     },
   });
-  console.log(quiz.value);
 };
 
 // deskripsi kelas
@@ -214,9 +211,6 @@ const { data: course } = await useFetch('/api/get-detailCourse', {
   body: JSON.stringify({ profileToken: token.value, id: route.params.slug })
 });
 const detailCourse = ref(course.value);
-// const getFiles = (id_pertemuan) => {
-//   return detailCourse.value.meetings.find(meeting => meeting._id === id_pertemuan)?.links || [];
-// };
 
 //ambil meetings di detail kelas
 const attendance = detailCourse.value.meetings;

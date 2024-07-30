@@ -61,9 +61,7 @@ const logout = async () => {
       method: 'POST',
       body: JSON.stringify({ profileToken: token.value })
     });
-    console.log(logoutResponse)
     if (logoutResponse.value.status == 200) {
-
       token.value = null;
       userId.value = null;
       Swal.fire({

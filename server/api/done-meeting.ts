@@ -27,7 +27,6 @@ export default defineEventHandler(async (event) => {
 
   let response;
   let result;
-  console.log('materi', materi);
   
   if (requestData.type == 'materi') {
     response = await fetch(materi, {
@@ -39,7 +38,6 @@ export default defineEventHandler(async (event) => {
         'Authorization': `Bearer ${token}`,
       },
     });
-    console.log('file', response);
     result = await response.json();
   } else if (requestData.type == 'tugas') {
     response = await fetch(tugas, {

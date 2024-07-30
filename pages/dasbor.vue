@@ -36,7 +36,6 @@ const { data: course } = await useFetch('/api/course', {
   body: JSON.stringify({ profileToken: token.value })
 });
 const dataCourse = ref(course.value);
-console.log(dataCourse);
 
 const search = ref('');
 const filteredKelas = computed(() => {

@@ -110,21 +110,4 @@ watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
   z-index: 1;
   max-width: 80%;
 }
-
-/* li {
-  font-size: 22px;
-  font-weight: normal;
-} */
-
-/* .btn-login{
-  background-color: #612D81 !important;
-  color: #FCF4B0 !important;
-  font-weight: bold !important;
-} */
-
-/* .font-li {
-    font-size: 12px;
-    font-weight: bold;  
-    list-style-type: circle!important;
-} */
 </style>

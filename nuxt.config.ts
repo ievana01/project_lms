@@ -20,17 +20,6 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
   ],
   plugins: ['~/plugins/vue-qrcode-reader.ts'],
-  // i18n: {
-  //   // Module Options
-  //   lazy: true,
-  //   langDir: "locales",
-  //   strategy: "prefix_except_default",
-  //   defaultLocale: "id", // Default Language
-  //   locales: [
-  //     { code: "id-ID", iso: "id-ID", name: "English(US)", file: "id-ID.json" },
-  //     { code: "en-US", iso: "en-US", name : "Indonesia", file: "en-US.json" },
-  //   ],
-  // },
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
@@ -61,7 +50,6 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
-
   },
   css: ['~/assets/css/global.css', '~/assets/css/md-small.css', '~/assets/css/md-medium.css', '~/assets/css/md-large.css',],
   runtimeConfig: {

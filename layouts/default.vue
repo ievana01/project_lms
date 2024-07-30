@@ -43,7 +43,7 @@ onMounted(() => {
     timer = setTimeout(() => {
       token.value = undefined;
       navigateTo('/login');
-    }, 100 * 60 * 1000);
+    }, 10 * 60 * 1000);
   };
 
   resetTimer();
