@@ -6,7 +6,7 @@
   <div v-if="!getNotification.length" class="ms-2 mr-2">
     <v-sheet color="var(--grey)" rounded>
       <div class="ms-2 mt-2 pt-2 pb-1 mr-2">
-        <p>Tidak ada tugas atau kuis yang perlu dikerjakan</p>
+        <p>Tidak ada notifikasi tugas atau kuis</p>
       </div>
     </v-sheet>
   </div>

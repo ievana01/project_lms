@@ -1,6 +1,6 @@
 <template>
   <div class="text-right mt-4">
-    <v-btn class="pa-2 mr-4 ml-2" color="red" style="font-weight: bold;">{{ times }}</v-btn>
+    <v-btn class="pa-2 mr-4 ml-2" color="red" style="font-weight: bold; min-width: 100px;">{{ times }}</v-btn>
   </div>
   <div class="kuis-container ms-4 mr-4 mt-4">
     <div :class="viewMode == 0 ? 'block' : 'd-none'">
@@ -10,7 +10,7 @@
             <div class="d-flex ms-2 mt-4 align-center">
               <h1>Soal {{ index + 1 }}</h1>
               <v-btn :icon="clickedIcons[index] ? 'mdi-flag' : 'mdi-flag-variant-outline'" variant="text"
-                :class="clickedIcons[index] ? 'clicked' : 'default'" @click="iconClick(index)" color="error">
+                :class="clickedIcons[index] ? 'clicked' : 'default'" @click="iconClick(index)" color="red">
               </v-btn>Flag Question
             </div>
             <div class="ms-2" style="color: red;">
@@ -45,7 +45,11 @@
           <div class="ms-4 pt-4 pb-2">
             <h1>NAVIGASI KUIS</h1>
             <div v-for="(detailSoal, index) in detailSoal" :key="index">
-              <v-btn class="mb-2 mr-2" color="white">{{ index + 1 }}</v-btn> <span v-if="detailSoal.answer">Pertanyaan
+              <v-btn class="mb-2 mr-2" :class="{
+                green: detailSoal.answer,
+                red: clickedIcons[index],
+                grey: !detailSoal.answer && !clickedIcons[index]
+              }">{{ index + 1 }}</v-btn> <span v-if="detailSoal.answer">Pertanyaan
                 sudah terjawab</span> <span v-else>Pertanyaan belum terjawab</span><br>
             </div>
           </div>
@@ -61,7 +65,11 @@
     <v-sheet style="background-color: var(--grey);" class="ms-4 mr-4 mt-6 pb-2" rounded>
       <h1 class="ms-3 pt-2">NAVIGASI KUIS</h1>
       <div class="ms-3">
-        <v-btn v-for="(soal, index) in detailSoal" :key="index" class="mb-2 mr-2" color="white">{{ index + 1 }} </v-btn>
+        <v-btn v-for="(soal, index) in detailSoal" :key="index" class="mb-2 mr-2" :class="{
+          green: detailSoal[index].answer,
+          red: clickedIcons[index],
+          grey: !detailSoal[index].answer && !clickedIcons[index]
+        }">{{index+1}}</v-btn>
       </div>
       <div class="text-center mt-8 mb-2" v-if="detailKuis">
         <v-btn class="button pa-2 mr-2 ml-2" @click="changeViewMode(2)" rounded="lg">selesaikan kuis</v-btn>
@@ -72,6 +80,8 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
+
 const route = useRoute();  
 
 const router = useRouter();  
@@ -140,18 +150,27 @@ const submitKuis = async () => {
     }),
   });
   if(response.status == 200){
-    alert('Kuis berhasil dikumpulkan');
-    router.push(`/kuis/${useRoute().params.slug}`);
+    Swal.fire({
+        title: 'Berhasil',
+        text: 'Berhasil mengumpulkan kuis',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        router.push(`/kuis/${useRoute().params.slug}`);
+      })
   }else{
-    alert('Gagal submit kuis')
+    Swal.fire({
+        title: 'Gagal',
+        text: data.value.message ?? 'Gagal mengumpulkan kuis',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
   }
 };
 
 const changeViewMode = (mode) => {
   viewMode.value = mode;
 }
-
-
 
 onMounted(() => {
   let x = setInterval(() => {
@@ -166,7 +185,9 @@ onMounted(() => {
     const distance = endTime - currentTime;
 
     if (distance <= 0) {
-      return "00:00:00  ";
+      clearInterval();
+      submitKuis();
+      return "00:00:00";
     }
 
     let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -200,6 +221,18 @@ onMounted(() => {
 .btnnext {
   display: flex;
   justify-content: space-between;
+}
+
+.green {
+  background-color: #14f94a!important;
+}
+
+.red {
+  background-color: #F50100 !important;
+}
+
+.grey {
+  background-color: #C0C0C0 !important;
 }
 
 .nomor {

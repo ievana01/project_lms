@@ -2,9 +2,9 @@ import { PutObjectCommand, S3 } from '@aws-sdk/client-s3';
 export default defineEventHandler(async (event) => {
   const body = await readMultipartFormData(event);
 
-  console.log(body[1].data.toString());
+  // console.log(body[1].data.toString());
   const file = body[0].data;
-  console.log('ini', file);
+  // console.log('ini', file);
   const name = body[1].data.toString();
   let runTimeConfig = useRuntimeConfig();
   const config = {
@@ -32,6 +32,6 @@ export default defineEventHandler(async (event) => {
       CacheControl: 'no-cache',
     })
   );
-  console.log(x);
+  // console.log(x);
   return { url: `${config.endpoint}/${config.Bucket}/${name}`};
 });

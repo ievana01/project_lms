@@ -8,7 +8,14 @@
       </v-col>
     </v-row>
   </div>
-  <div>
+  <div v-if="!listPresensi.length" class="ms-2 mr-2 mt-4">
+    <v-card color="var(--grey)" style="max-height: auto;">
+      <div class="ms-3 mt-3">
+        <p>Data presensi belum tersedia</p>
+      </div>
+    </v-card>
+  </div>
+  <div v-else>
     <CardPresensi :presensi="listPresensi" />
   </div>
 </template>

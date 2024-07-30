@@ -2,8 +2,8 @@
   <div class="ms-4">
     <h1 style="color: var(--purple);">DAFTAR NILAI</h1>
   </div>
-  <div style="min-height: 380px">
-    <v-table class="ms-4 mr-4" v-if="dataNilai">
+  <div>
+    <v-table class="ms-4 mr-4" v-if="dataNilai.length > 0">
       <thead>
         <tr>
           <th style="font-weight: bold;">Nama Kelas</th>
@@ -24,7 +24,7 @@
     </v-table>
     <v-table v-else>
       <div class="mt-4">
-        <p class="text-center" style="font-weight: bold">Data nilai belum tersedia</p>
+        <h2 class="text-center" style="font-weight: bold">Data nilai belum tersedia</h2>
       </div>
     </v-table>
   </div>

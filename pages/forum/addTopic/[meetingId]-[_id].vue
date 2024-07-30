@@ -7,7 +7,7 @@
     </div>
     <div class="text-center mt-16">
       <v-btn class="button pa-2 mr-2 ml-2" @click="addForum">KIRIM KE FORUM</v-btn>
-      <v-btn class="button pa-2 mr-2 ml-2" color="red">BATAL</v-btn>
+      <v-btn class="button pa-2 mr-2 ml-2" color="red" :to="`/forum/${topikKelas[0].meetingId}-${idForum}`">BATAL</v-btn>
     </div>
   </div>
 </template>
@@ -32,6 +32,15 @@ const forumId = ref(useRoute().params._id);
 
 const addForum = async () => {
   try {
+    if(forumName.value === '' || deskripsi.value === ''){
+      Swal.fire({
+            title: 'Gagal',
+            text: 'Nama topik dan deskripsi wajib diisi!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+      return;
+    }
     const response = await fetch('/api/add-forum', {
       method: 'POST',
       headers: {

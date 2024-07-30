@@ -25,20 +25,19 @@
             </v-list>
           </v-card-text>
           <div class="text-right">
-            <NuxtLink to="/editprofil"><v-btn class="button pa-2 mr-2 ml-2" rounded="lg">UBAH PROFIL</v-btn></NuxtLink>
+            <NuxtLink to="/editprofil"><v-btn class="button" rounded="lg">UBAH PROFIL</v-btn></NuxtLink>
           </div>
-
         </v-card>
       </v-col>
       <v-col cols="12" md="6">
         <v-card class="pa-4" elevation="20" style="min-height: 340px;">
-          <v-card-title class="bold">Detail Kursus</v-card-title>
+          <v-card-title class="bold">Daftar Kelas</v-card-title>
           <v-card-text>
-            <div v-if="dataCourse && dataCourse.length">
+            <v-list>
               <v-list-item v-for="(course, index) in dataCourse" :key="index" link :to="`/kelas/${course.acId}`">
                 <li class="font-li">{{ course.courseName }}</li>
               </v-list-item>
-            </div>
+            </v-list>
           </v-card-text>
         </v-card>
       </v-col>
@@ -51,12 +50,12 @@
             <v-list>
               <v-list-item>
                 <v-list-item-title>
-                  <li><a href="/jelajahiSesi" style="color: var(--blue);font-size: 14px;">Jelajahi Sesi</a></li>
+                  <li><a href="/jelajahiSesi" class="ukuran-font">Jelajahi Sesi</a></li>
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
                 <v-list-item-title>
-                  <li><a href="" style="color: var(--blue);font-size: 14px;">Nilai</a></li>
+                  <li><a href="/nilai" class="ukuran-font">Nilai</a></li>
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -69,12 +68,12 @@
           <v-card-text>
             <v-list>
               <v-list-item>
-                <v-list-item-subtitle>Akses pertama ke situs</v-list-item-subtitle>
-                <v-list-item-subtitle>{{formattedDate(profileApi?.access?.firstAccess)}}</v-list-item-subtitle>
+                <v-list-item-subtitle class="ukuran-font">Akses pertama ke situs</v-list-item-subtitle>
+                <v-list-item-subtitle class="ukuran-font">{{formattedDate(profileApi?.access?.firstAccess)}}</v-list-item-subtitle>
               </v-list-item>
               <v-list-item>
-                <v-list-item-subtitle>Akses terakhir ke situs</v-list-item-subtitle>
-                <v-list-item-subtitle>{{formattedDate(profileApi?.access?.lastAccess)}}</v-list-item-subtitle>
+                <v-list-item-subtitle class="ukuran-font">Akses terakhir ke situs</v-list-item-subtitle>
+                <v-list-item-subtitle class="ukuran-font">{{formattedDate(profileApi?.access?.lastAccess)}}</v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -93,12 +92,12 @@
             <v-list>
               <v-list-item>
                 <v-list-item-title>
-                  <li><a href="/forumPost" style="color: var(--blue); font-size: 14px;">Postingan Forum </a></li>
+                  <li><a href="/forumPost" class="ukuran-font">Postingan Forum </a></li>
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
                 <v-list-item-title>
-                  <li><a href="/diskusiForum" style="color: var(--blue); font-size: 14px;">Diskusi Forum</a></li>
+                  <li><a href="/diskusiForum" class="ukuran-font">Diskusi Forum</a></li>
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -112,12 +111,12 @@
           <v-card-text>
             <v-list>
               <v-list-item>
-                <v-list-item-title>Kode QR untuk Aplikasi Seluler</v-list-item-title>
+                <v-list-item-title class="ukuran-font">Kode QR untuk Aplikasi Seluler</v-list-item-title>
               </v-list-item>
             </v-list>
             <v-row>
               <v-col cols="auto">
-                <v-icon size="100" color="black" x-large>mdi-qrcode</v-icon>
+                <v-icon class="ms-2" size="80" color="black" x-large>mdi-qrcode</v-icon>
               </v-col>
             </v-row>
           </v-card-text>
@@ -165,4 +164,5 @@ const formattedDate = (dateString) => {
   font-weight: bold !important;
   ;
 }
+
 </style>

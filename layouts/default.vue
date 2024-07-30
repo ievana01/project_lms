@@ -9,8 +9,8 @@
   <v-main class="mt-3">
     <slot />
     <br>
-    <Footer />
   </v-main>
+  <Footer class="footer" />
 </template>
 
 <script setup>
@@ -38,26 +38,26 @@ onMounted(() => {
     return navigateTo('/login')
   }
 
-  // const resetTimer = () => {
-  //   clearTimeout(timer);
-  //   timer = setTimeout(() => {
-  //     token.value = undefined;
-  //     navigateTo('/login');
-  //   }, 10 * 60 * 1000);
-  // };
+  const resetTimer = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      token.value = undefined;
+      navigateTo('/login');
+    }, 100 * 60 * 1000);
+  };
 
-  // resetTimer();
+  resetTimer();
 
-  // const activityEvents = ['click', 'mousemove', 'keydown', 'scroll'];
-  // activityEvents.forEach(event => {
-  //   document.addEventListener(event, resetTimer);
-  // });
+  const activityEvents = ['click', 'mousemove', 'keydown', 'scroll'];
+  activityEvents.forEach(event => {
+    document.addEventListener(event, resetTimer);
+  });
 
-  // onBeforeUnmount(() => {
-  //   activityEvents.forEach(event => {
-  //     document.removeEventListener(event, resetTimer);
-  //   });
-  // });
+  onBeforeUnmount(() => {
+    activityEvents.forEach(event => {
+      document.removeEventListener(event, resetTimer);
+    });
+  });
 });
 
 const { data: profile } = await useFetch('/api/profile', {
@@ -72,4 +72,6 @@ if (profile.value) {
 
 </script>
 
-<style></style>
+<style>
+
+</style>

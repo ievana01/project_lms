@@ -17,11 +17,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="dataTugas.isSubmitting">
+            <tr>
               <td>Status Pengajuan</td>
               <td>: Diajukan</td>
             </tr>
-            <tr v-if="dataTugas.isSubmitting">
+            <tr>
               <td>Status Penilaian</td>
               <td>: Proses Dinilai</td>
             </tr>
@@ -39,7 +39,7 @@
             </tr>
             <tr>
               <td>Komentar pengajuan</td>
-              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar({{dataTugas.commentAssignment.length}})</v-btn></td>
+              <td><v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar({{dataTugas.commentAssignment.length}})</v-btn></td>
             </tr>
             <tr>
               <td></td>
@@ -100,7 +100,7 @@
             </tr>
             <tr>
               <td>Komentar pengajuan</td>
-              <td>:<v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar({{dataTugas.commentAssignment.length}})</v-btn></td>
+              <td><v-btn variant="text" @click="toggleComment" style="color: blue; font-weight: bold">Komentar({{dataTugas.commentAssignment.length}})</v-btn></td>
             </tr>
             <tr>
               <td></td>
@@ -133,7 +133,7 @@
 
     
     <div class="button-container" v-if="!showUploadForm && !dataTugas.finishedAssignment && dataTugas.isSubmitting == true">
-      <v-btn class="button pa-2 mr-2 ml-2" @click="toggleUploadForm" rounded="lg">Kumpulkan Tugas</v-btn>
+      <v-btn class="button pa-2 mr-2 ml-2" @click="toggleUploadForm" rounedd="lg">Kumpulkan Tugas</v-btn>
     </div>
   </div>
 

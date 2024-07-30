@@ -9,12 +9,12 @@
       </v-row>
     </div>
     <v-row class="align-center ms-1">
-      <v-col cols="12" md="2" lg="2">
-        <v-img src="public/img/bg.jpeg" style="width: 300px;"></v-img>
+      <v-col cols="12" md="4" lg="2">
+        <img src="public/img/bg.jpeg" alt="" style="width: 300px;">
       </v-col>
       <v-col class="ms-2">
-        <h5 class="pt-2">{{ detailCourse.name }}</h5> {{dataCourse}}
-        <p>{{ desKelas.code }}</p>
+        <h5 class="pt-2">{{ detailCourse.name }}</h5>
+        <p>{{ detailCourse.code }}</p>
         <p>{{ detailCourse.lecturerName }}</p>
       </v-col>
     </v-row>
@@ -43,9 +43,9 @@
     body: JSON.stringify({ profileToken: token.value})
   });
   const desKelas = ref(descCourse.value);
-  if (descCourse.value && descCourse.value.length > 0) {
-    desKelas.value = descCourse.value[0];
-  }
+  // if (descCourse.value && descCourse.value.length > 0) {
+  //   desKelas.value = descCourse.value[0];
+  // }
   </script>
   
   <style>

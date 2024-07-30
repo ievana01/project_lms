@@ -1,7 +1,7 @@
 <template>
   <v-form>
     <div class="ms-2 mr-2">
-      <h1>TAMBAH ACARA</h1>
+      <h1 class="font-color-purple">TAMBAH ACARA</h1>
       <v-text-field label="Nama Acara" variant="solo" v-model="namaAcara"></v-text-field>
       <v-select v-model="kategoriAcara" :items="['acara kelas', 'acara pengguna']" item-text="label" item-value="value" 
         label="Pilih Kategori Acara" variant="solo"></v-select>
@@ -64,6 +64,15 @@ const formatDateApi = (date) => {
 
 const addEvent = async () => {
   try {
+    if(namaAcara.value === '' || kategoriAcara.value === '' || selectedDate.value === null){
+      Swal.fire({
+            title: 'Gagal',
+            text: 'Nama, kategori dan tanggal acara wajib diisi!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+      return;
+    }
     const response = await fetch('/api/add-event', {
       method: 'POST',
       headers: {

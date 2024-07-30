@@ -1,20 +1,19 @@
 <template>
   <v-container class="ms-0">
     <v-row class="list-card">
-      <v-col v-if=kelas.length v-for="(kelas, index) in kelas" :key="index">
-        <NuxtLink :to="`/kelas/${kelas.acId}`">
+      <v-col v-if="kelas.length" v-for="(item, index) in kelas" :key="index">
+        <NuxtLink :to="`/kelas/${item.acId}`">
           <v-card style="background-color: #F5F5F5;">
-            <v-img src="/public/img/course.jpg" style="height: 100px; width: 250px;" class="mt-4"></v-img>
+            <v-img src="/public/img/course.jpg" style=" width: 200px;" class="ms-2 mt-2"></v-img>
             <br>
             <div style="padding: 0 10px 0 10px;">
-              <h1>{{ kelas.courseName }}</h1>
+              <h1>{{ item.courseName }}</h1>
               <h6>Deskripsi Kelas</h6>
-              <p style="text-align: justify;">{{ desKelas.description }}</p>
+              <p style="text-align: justify;">{{ getDeskripsi(item.courseName) }}</p>
               <h6>Capaian Pembelajaran</h6>
-              <p style="text-align: justify;">{{ desKelas.purpose }}</p>
-              <v-progress-linear v-model="kelas.complition" height="10" width="300" rounded bg-color="red" color="#612D81">
-              </v-progress-linear>
-              <h6>{{ kelas.complition ? Math.ceil(kelas.complition) : 0 }}% selesai</h6>
+              <p style="text-align: justify;">{{ getPurpose(item.courseName) }}</p>
+              <v-progress-linear v-model="item.complition" height="10" width="300" rounded bg-color="red" color="#612D81"></v-progress-linear>
+              <h6>{{ item.complition ? Math.ceil(item.complition) : 0 }}% selesai</h6>
             </div>
           </v-card>
         </NuxtLink>
@@ -22,27 +21,42 @@
     </v-row>
   </v-container>
 </template>
-<script setup>
 
+<script setup>
 const props = defineProps({
   kelas: {
     type: Array,
     required: true
   },
 })
-const kelasFiltered = ref([])
 
-let token = useCookie('token');
-// detailCourse
+// Mengambil data dari API
+let token = useCookie('token')
 const { data: descCourse } = await useFetch('/api/deskCourse', {
   method: 'POST',
-  body: JSON.stringify({ profileToken: token.value})
-});
-const desKelas = ref(descCourse.value);
-if (descCourse.value && descCourse.value.length > 0) {
-  desKelas.value = descCourse.value[0];
-};
-console.log(desKelas);
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ profileToken: token.value })
+})
+
+// Menyimpan data deskripsi kelas
+const desKelas = ref(descCourse.value)
+
+// Fungsi untuk mendapatkan deskripsi berdasarkan nama kelas
+const getDeskripsi = (courseName) => {
+  const course = desKelas.value.find(course => course.name === courseName)
+  return course ? course.description : 'Deskripsi tidak tersedia'
+}
+
+// Fungsi untuk mendapatkan tujuan berdasarkan nama kelas
+const getPurpose = (courseName) => {
+  const course = desKelas.value.find(course => course.name === courseName)
+  return course ? course.purpose : 'Tujuan tidak tersedia'
+}
+
 </script>
 
-<style></style>
+<style>
+/* Tambahkan gaya sesuai kebutuhan */
+</style>

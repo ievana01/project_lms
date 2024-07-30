@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$viewport.isLessThan('tablet')">
+  <div v-if="$viewport.isLessThan('desktop')">
     <div v-if="!selectedUser">
       <div class="ms-2">
         <v-btn class="button mb-4" prepend-icon="mdi-plus" rounded="lg" @click="toggleNewMessagePanel">pesan baru</v-btn>
@@ -8,7 +8,7 @@
         <v-sheet style="border: 2px solid var(--purple)" class="pb-4" rounded>
           <div class="pt-4 ms-2 mr-2">
             <v-text-field density="compact" label="Cari pengguna" prepend-inner-icon="mdi-magnify" variant="solo-filled" flat
-              single-line style="width: 250px;" v-model="search"></v-text-field>
+            single-line style="width: 250px;" v-model="search"></v-text-field>
           </div>
           <v-card class="ms-2 mr-2" color="var(--grey)">
             <div>
@@ -20,8 +20,11 @@
           </v-card>
         </v-sheet>
       </div>
-      <div class="ms-2 mt-4">
+      <div class="ms-2 mr-2 mt-4">
         <h1>Pesan</h1>
+        <v-sheet v-if="dataUserChat.length === 0" style=" width: 100%; display: flex; justify-content: center;" class="text-center">
+          <v-card text="Pilih obrolan untuk memulai mengirim pesan" color="var(--purple)" style="color: white; width: 400px;"></v-card>
+        </v-sheet>
       </div>
       <div class="ms-2 mr-2 mb-4" v-for="(userChat, index) in dataUserChat" :key="index" @click="openChat(userChat.fullName, userChat._id)">
         <v-card color="var(--grey)" style="max-height: auto;">
@@ -50,7 +53,7 @@
         </v-sheet>
       </div>
       <div class="ms-2 mr-2 pt-5" style="background-color: var(--grey); display: flex; align-items: center; justify-content: space-between; margin-top: 200px;">
-        <v-text-field density="compact" label="Ketik pesan anda disini..." variant="solo" flat single-line
+        <v-text-field density="compact" label="Ketik pesan Anda di sini..." variant="solo" flat single-line
           rounded="lg" class="ms-2 mr-2" v-model="message">
           <template v-slot:append-inner>
             <v-btn icon="mdi-send" variant="text" color="#612D81" @click="sendMessage(selectedChatId, selectedUserId)"></v-btn>
@@ -60,9 +63,9 @@
     </div>
   </div>
 
-  <div v-if="$viewport.isGreaterOrEquals('tablet')">
+  <div v-if="$viewport.isGreaterThan('tablet')">
     <div class="ms-2 d-flex">
-      <v-sheet style="background-color: var(--grey); width: 400px;" class="pt-4 pb-4">
+      <v-sheet style="background-color: var(--grey); width: 400px; min-height: 500px;" class="pt-4 pb-4">
         <div class="ms-2">
           <v-btn class="button" prepend-icon="mdi-plus" rounded="lg" @click="toggleNewMessagePanel">pesan baru</v-btn>
         </div>
@@ -114,8 +117,8 @@
             </div>
           </v-sheet>
         </div>
-        <div class="ms-2 mr-2 pt-5" style="background-color: var(--grey); display: flex; align-items: center; justify-content: space-between; margin-top: 200px;">
-          <v-text-field density="compact" label="Ketik pesan anda disini..." variant="solo" flat single-line
+        <div class="ms-2 mr-2 pt-5" style="background-color: var(--grey); display: flex; align-items: center; justify-content: space-between; margin-top: 340px;">
+          <v-text-field density="compact" label="Ketik pesan Anda di sini..." variant="solo" flat single-line
             rounded="lg" class="ms-2 mr-2" v-model="message">
             <template v-slot:append-inner>
               <v-btn icon="mdi-send" variant="text" color="#612D81" @click="sendMessage(selectedChatId, selectedUserId)"></v-btn>
@@ -165,6 +168,7 @@ const selectedUserId = ref(null);
 const selectedChatId = ref(null);
 const getChat = ref([]);
 
+import Swal from 'sweetalert2';
 
 const createRoomChat = async (id) => {
   try {
@@ -178,17 +182,29 @@ const createRoomChat = async (id) => {
     });
 
     if (response.status == 200) {
-      // alert('Chat room berhasil dibuat');
-      window.location.reload();
-      
-      // const createdUser = getUser.value.find(user => user._id === id);
-      // const newChatRoom = await response.json();
-      // openChat(createdUser.fullName, newChatRoom.chatRoomId)
+      Swal.fire({
+        title: 'Berhasil',
+        text: 'Ruang obrolan berhasil dibuat, silahkan pilih obrolan yang telah dibuat!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload();
+      })
     } else {
-      alert('Gagal membuat chat room');
+      Swal.fire({
+        title: 'Gagal',
+        text: data.value.message ?? 'Gagal membuat ruang obrolan',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     }
   } catch (error) {
-    console.error('Gagal membuat chat room:', error);
+    Swal.fire({
+        title: 'Error',
+        text: 'Server error, silahkan muat ulang!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
   }
 };
 

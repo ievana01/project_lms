@@ -7,9 +7,6 @@
         <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-account" variant="outlined" to="/profile"></v-btn>
         <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-chat" variant="outlined" to="/chat"></v-btn>
         <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-bell" variant="outlined" to="/notifikasi"></v-btn>
-        <v-btn class="ma-2" size="small" color="#612D81" icon="mdi-translate" variant="outlined" @click="translatePage">
-
-        </v-btn>
       </div>
     </v-app-bar>
     <div class="pt-2">
@@ -17,29 +14,29 @@
         :rounded="false" class="mt-4">
         <v-list density="compact" nav>
           <v-list-item link to="/dasbor">
-            <h6>Dasbor</h6>
+            <h4>Dasbor</h4>
           </v-list-item>
 
           <v-list-item>
-            <h6>Kursus Saya</h6>
+            <h5>Kursus Saya</h5>
+            <div v-if="dataCourse && dataCourse.length">
+              <v-list-item v-for="(course, index) in dataCourse" :key="index" link :to="`/kelas/${course.acId}`">
+                <li class="font-li">{{ course.courseName }}</li>
+              </v-list-item>
+            </div>
           </v-list-item>
-          <div v-if="dataCourse && dataCourse.length">
-            <v-list-item v-for="(course, index) in dataCourse" :key="index" link :to="`/kelas/${course.acId}`">
-              <li class="font-li">{{ course.courseName }}</li>
-            </v-list-item>
-          </div>
 
           <v-list-item link to="/nilai">
-            <h6>Nilai</h6>
+            <h5>Nilai</h5>
           </v-list-item>
           <v-list-item link to="/listTugas">
-            <h6>Tugas</h6>
+            <h5>Tugas</h5>
           </v-list-item>
           <v-list-item link to="/calendar">
-            <h6>Kalendar</h6>
+            <h4>Kalendar</h4>
           </v-list-item>
           <v-list-item link @click="logout">
-            <h6>Keluar</h6>
+            <h4>Keluar</h4>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
@@ -47,7 +44,10 @@
   </template>
 
   <script setup>
+  import Swal from 'sweetalert2';
+
   let token = useCookie('token');
+  const userId = useCookie('userId')
   const { data: course } = await useFetch('/api/course', {
     method: 'POST',
     body: JSON.stringify({ profileToken: token.value })
@@ -65,50 +65,28 @@
       if (logoutResponse.value.status == 200) {
 
         token.value = null;
+        userId.value = null;
         console.log(token.value)
+        Swal.fire({
+        title: 'Berhasil',
+        text: 'Sukses Logout',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
         navigateTo('/login')
+      })
       } else {
-        console.error('Logout failed');
+        Swal.fire({
+        title: 'Gagal',
+        text: data.value.message ?? 'Gagal logout',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
       }
     } catch (error) {
       console.error('Error during logout:', error);
     }
   };
-
-  const loadGoogleTranslateScript = () => {
-  return new Promise((resolve, reject) => {
-    if (document.getElementById('google-translate-script')) {
-      resolve()
-      return
-    }
-    const script = document.createElement('script')
-    script.id = 'google-translate-script'
-    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
-    script.onload = resolve
-    script.onerror = reject
-    document.body.appendChild(script)
-  })
-}
-
-const translatePage = async () => {
-  try {
-    await loadGoogleTranslateScript()
-    if (window.googleTranslateElementInit) {
-      window.googleTranslateElementInit()
-    } else {
-      window.googleTranslateElementInit = () => {
-        new window.google.translate.TranslateElement({
-          pageLanguage: '',
-          includedLanguages: 'en',
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false
-        }, 'google_translate_element')
-      }
-    }
-  } catch (error) {
-    console.error('Failed to load Google Translate script:', error)
-  }
-}
 </script>
 
   <style>

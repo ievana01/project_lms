@@ -23,8 +23,11 @@
     <div v-else>
         <div class="text-center mt-16 mb-8">
              <p>Waktu pengerjaan {{ detailKuis.duration }} menit</p>
-            <div>
+            <div v-if="!waktuKuis">
                 <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" @click="confirmQuiz">Kerjakan Kuis</v-btn>
+            </div>
+            <div v-else>
+                <p style="color: red">Terlamat : {{ remainingTime }}</p>
             </div>
         </div>
     </div>
@@ -54,6 +57,11 @@ const { data: kuis } = await useFetch('/api/detailQuiz', {
 const detailKuis = ref();
 detailKuis.value = kuis.value;;
 
+const waktuKuis = computed(() => {
+    const now = new Date();
+    const endDate = new Date(detailKuis.value.endDate);
+    return now > endDate;
+});
 
 const router = useRouter();
 const confirmQuiz = () => {
@@ -93,6 +101,26 @@ const startQuiz = async () => {
         });
     }
 };
+
+const remainingTime = computed(() => {
+    if (!waktuKuis.value) return '';
+
+    const now = new Date();
+    const endDate = new Date(detailKuis.value.endDate);
+    const difference = now - endDate;
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return `${days} hari ${hours} jam ${minutes} menit ${seconds} detik`;
+});
 </script>
 
-<style></style>
+<style >
+.swal2-show {
+  width:400px;
+  height: auto;
+}
+</style>

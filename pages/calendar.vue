@@ -2,18 +2,26 @@
   <v-container class="ms-1">
     <v-row>
       <v-col cols="12" md="6">
-        <v-card class="pa-4" elevation="20" style="min-height: 260px;">
+        <v-card class="pa-4" elevation="20">
           <v-card-title class="bold">Kategori</v-card-title>
           <v-card-text>
             <v-list>
               <v-list-item>
                 <v-list-item-title>
-                  <li class="font-li">Acara Kelas</li>
+                  <div class="d-flex">
+                    <!-- <li class="font-li">Acara Kelas</li> -->
+                    <v-sheet class="bg-purple-accent-1 mr-4" width="20" height="20" rounded="xl"></v-sheet>
+                    <p>Acara Kelas</p>
+                  </div>
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
                 <v-list-item-title>
-                  <li class="font-li">Acara Pengguna</li>
+                  <div class="d-flex">
+                    <!-- <li class="font-li">Acara Pengguna</li> -->
+                    <v-sheet class="bg-light-blue-accent-3 mr-4" width="20" height="20" rounded="xl"></v-sheet>
+                    <p>Acara Pengguna</p>
+                  </div>
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -36,11 +44,11 @@
       </v-col>
 
       <v-col cols="12" md="6">
-        <v-card class="pa-4" elevation="20">
+        <v-card class="pt-3" elevation="20">
           <v-card-text>
             <div v-if="dataEvent">
               <div v-for="(event, index) in filteredDataEvent" :key="index">
-                <v-card class="mb-2" rounded elevation="20" :color="event.category === 'acara kelas' ? 'red-accent-3' : event.category === 'acara pengguna' ? 'blue-accent-3' : ''">
+                <v-card class="mb-4" rounded elevation="5" :color="event.category === 'acara kelas' ? 'purple-accent-1' : event.category === 'acara pengguna' ? 'light-blue-accent-3' : ''">
                   <v-card-text>
                     <div class="ms-2 mr-2 pt-1">
                       <h6>{{ event.name }}</h6>
@@ -76,7 +84,6 @@ const { data: event } = await useFetch('/api/get-event', {
 });
 
 const dataEvent = ref(event.value);
-console.log(dataEvent.value);
 
 const formattedDate = (dateString) => {
   try {
@@ -89,7 +96,7 @@ const formattedDate = (dateString) => {
 };
 
 const events = ref([]);
-const colors= ['red-accent-3','blue-accent-3'];
+const colors= ['purple-accent-1','light-blue-accent-3'];
 
 const fetchEvents = ({ start, end }) => {
   const event = []

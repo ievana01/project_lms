@@ -1,18 +1,22 @@
 /* smartphone */
 @media (max-width:560px) {
     h1 {
-        font-size: 16px;
+        font-size: 1em;
     }
     h2{
-        font-size: 14px;
+        font-size: 0.875em;
     }
 
     .nama{
-        font-size: 16px;
+        font-size: 1em;
     }
 
     .nrp{
-        font-size: 14px;
+        font-size: 0.875em;
+    }
+
+    h4{
+        font-size: 14px!important;
     }
 
     /* forgot */
@@ -61,7 +65,7 @@
     }
 
     .btn-login {
-        font-size: 16px !important;
+        font-size: 1em !important;
         font-weight: bold !important;
         color: var(--yellow) !important;
         background-color: var(--purple) !important;
@@ -99,13 +103,19 @@
         padding: 20px;
     }
 
+    /* .font-li {
+        font-size: 0.75em;
+    } */
     .font-li {
-        font-size: 12px;
+        font-size: 14px!important;
+        font-weight: bold;  
+        list-style-type: circle!important;
     }
+    
 
     /* card */
     p {
-        font-size: 12px;
+        font-size: 0.875em;
     }
 
     .navigasi {
@@ -116,4 +126,18 @@
         padding-top: 8px;
     }
 
+    .button {
+        font-size: 0.75em!important;
+        color: var(--yellow) !important;
+        background-color: var(--purple) !important;
+        font-weight: 600;
+    }
+
+    .footer{
+        max-height: 180px;
+    }
+
+    .ukuran-font{
+        font-size: 0.875em!important;
+    }
 }

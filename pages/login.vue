@@ -42,14 +42,19 @@ let password = ref('');
 
 const router = useRouter()
 const token = useCookie('token')
+const userId = useCookie('userId')
+const nrp = useCookie('nrp')
 const login = async () => {
   const { data } = await useFetch('/api/user', {
     method: 'POST',
     body: JSON.stringify({ username: username.value, password: password.value }),
   });
+  console.log(data);
   if (data.value) {
     if (data.value.status == 200) {
       token.value = data.value.result.profileToken;
+      userId.value = data.value.result.profileId;
+      nrp.value = data.value.result.studentNrp;
       Swal.fire({
         title: 'Berhasil',
         text: 'Sukses Login',
@@ -88,7 +93,7 @@ const activity = async() => {
 };
 </script>
 
-<style>
+<style scoped>
 .swal2-show {
   width: 300px;
   height: auto;

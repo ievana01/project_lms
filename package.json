@@ -19,15 +19,20 @@
     "@syncfusion/ej2-vue-calendars": "^25.2.7",
     "date-fns": "^3.6.0",
     "js-cookie": "^3.0.5",
+    "jsqr": "^1.4.0",
     "nuxt": "3.11.2",
     "nuxt-viewport": "^2.1.5",
     "pinia": "^2.1.7",
+    "qr-code-styling": "^1.6.0-rc.1",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.11.1",
     "v-calendar": "^3.1.2",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue-qr-reader": "^1.6.2",
+    "vue-qrcode-reader": "^5.5.7",
+    "vue-router": "^4.3.2",
+    "vue3-qrcode-reader": "^0.0.1"
   },
   "devDependencies": {
     "vite-plugin-vuetify": "^2.0.3",

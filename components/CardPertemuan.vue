@@ -12,13 +12,13 @@
           </v-col>
         </v-row>
         <v-row v-if="expandedDesKelas" class="px-4">
-          <div class="ms-8 mr-2 pb-2">
+          <div class="ms-8 mr-6 pb-2">
             <h6>Deskripsi</h6>
-            <p style="text-align: justify;">{{ desKelas.description }}</p>
+            <p style="text-align: justify;">{{ detailCourse.description }}</p>
             <br>
             <h6>Tujuan</h6>
             <p style="text-align: justify;">
-              {{ desKelas.purpose }}
+              {{ detailCourse.purpose }}
             </p>
           </div>
         </v-row>
@@ -37,23 +37,22 @@
           </v-col>
         </v-row>
         <v-row v-if="expandedPanels[index]" class="px-4">
-          <!-- absensi -->
           <div>
-            <div class="ms-8 mb-2 d-flex" v-if="item.attendance">
-                <NuxtLink>
-                  <div class="file-content mt-2">
-                    <v-icon left class="mr-2" color="green">{{ getIcon('absensi') }}</v-icon><span style="color: black">{{ item.attendance.meetingName }}</span> 
-                  </div>
-                </NuxtLink>
-              </div>
-            <div v-else>
+            <div v-if="!item.attendance">
               <div class="ms-8 mb-2 d-flex">
                 <NuxtLink :to="`/absensi/${detailCourse._id}-${item._id}`">
                   <div class="file-content mt-2">
-                    <v-icon left class="mr-2" color="black">{{ getIcon('absensi') }}</v-icon><span style="color: black">{{ item.attendance.meetingName }}</span> 
+                    <v-icon left class="mr-2" color="black">{{ getIcon('absensi') }}</v-icon><span style="color: black">Presensi {{ item.name }}</span> 
                   </div>
                 </NuxtLink>
               </div>
+            </div>
+            <div class="ms-8 mb-2 d-flex" v-else>
+                <NuxtLink>
+                  <div class="file-content mt-2">
+                    <v-icon left class="mr-2" color="green">{{ getIcon('absensi') }}</v-icon><span style="color: black">Presensi {{ item.attendance.meetingName }}</span> 
+                  </div>
+                </NuxtLink>
             </div>
           </div>
 
@@ -66,7 +65,7 @@
                   </div>
                 </NuxtLink>
               </div>
-            </div>
+          </div>
 
           <!-- materi -->
           <div class="ms-4 mr-2 w-100 pb-2">
@@ -150,7 +149,17 @@
               </div>
             </div>
             
-            
+            <!-- folder -->
+          <div v-if="item.folder.length">
+              <div v-for="(folders, index) in item.folder" :key="index"
+                class="assignment-item mb-4 ms-4 mr-4">
+                <NuxtLink :to="`/folder/${folders._id}`" style="color: black;">
+                  <div class="file-content mt-2">
+                    <v-icon left class="mr-2">{{ getIcon('folder') }}</v-icon> {{ folders.name }}
+                  </div>
+                </NuxtLink>
+              </div>
+            </div>
           </div>
         </v-row>
       </v-sheet>
@@ -168,7 +177,6 @@ const doneMeeting = async (idPertemuan,name) => {
       profileToken: token.value, acId: route.params.slug, meetingId: idPertemuan, type: 'materi', materialName: name, 
     },
   });
-  console.log(headers);
   console.log(meeting.value);
 };
 
@@ -206,23 +214,20 @@ const { data: course } = await useFetch('/api/get-detailCourse', {
   body: JSON.stringify({ profileToken: token.value, id: route.params.slug })
 });
 const detailCourse = ref(course.value);
-console.log(detailCourse.value);
 // const getFiles = (id_pertemuan) => {
 //   return detailCourse.value.meetings.find(meeting => meeting._id === id_pertemuan)?.links || [];
 // };
 
 //ambil meetings di detail kelas
 const attendance = detailCourse.value.meetings;
-console.log(attendance);
 
 const file = [
-  { icon: 'mdi-file-powerpoint', nama: 'Introduction', link: '', pertemuan: 1 },
-  { icon: 'mdi-file-document', nama: 'Chapter 1', link: '', pertemuan: 1 },
-  { icon: 'mdi-clipboard-text', nama: 'Tugas Pertemuan 1', link: '/tugas', pertemuan: 1, code: 'task' },
-  { icon: 'mdi-check-circle-outline', nama: 'Presensi Pertemuan 1', link: '/presensi', pertemuan: 1, code: 'absensi' },
-  { icon: 'mdi-file-document', nama: 'Setup Guide', link: '', pertemuan: 2, code: 'file' },
-  { icon: 'mdi-checkbox-marked-outline', nama: 'Kuis Pertemuan 2', link: '/kuis', pertemuan: 2, code: 'kuis' },
-  { icon: 'mdi-forum', nama: 'Forum Kelas', link: '/forum', pertemuan: 3, code: 'forum' },
+  { icon: 'mdi-folder', code:'folder'},
+  { icon: 'mdi-clipboard-text', code: 'task' },
+  { icon: 'mdi-check-circle-outline', code: 'absensi' },
+  { icon: 'mdi-file-document', code: 'file' },
+  { icon: 'mdi-checkbox-marked-outline', code: 'kuis' },
+  { icon: 'mdi-forum', code: 'forum' },
 ];
 
 const expandedDesKelas = ref(false);

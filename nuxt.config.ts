@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/i18n',
   ],
+  plugins: ['~/plugins/vue-qrcode-reader.ts'],
   // i18n: {
   //   // Module Options
   //   lazy: true,

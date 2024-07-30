@@ -12,10 +12,10 @@
       <v-img class="set-foto" cover src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"></v-img>
     </div>
     <div class="container-info">
-      <v-card class="color-purple" style="max-height: 235px;">
+      <v-card class="color-purple">
         <v-card-text>
-          <h1>Informasi Penting UTS Genap 2023-2024</h1>
-          <ul class="pl-10">
+          <h1>Informasi Penting Semester Ganjil 2024/2025</h1>
+          <ul class="pl-4">
             <li class="font-li">Ujian Tengah Semester (22 April 2024 - 6 May 2024)</li>
             <li class="font-li">Ujian Akhir Semester (22 April 2024 - 6 May 2024)</li>
           </ul>
@@ -28,9 +28,9 @@
     <div class="container-foto">
       <v-img class="pt-14" cover src="https://cdn.vuetifyjs.com/images/parallax/material.jpg">
         <div class="overlay d-flex justify-center align-center">
-          <v-card width="1136px" height="235px" class="color-purple">
+          <v-card width="1136px" class="color-purple">
             <v-card-text>
-              <h1>Informasi Penting UTS Genap 2023-2024</h1>
+              <h1>Informasi Penting Genap 2023-2024</h1>
               <ul class="pl-10">
                 <li class="font-li">Ujian Tengah Semester (22 April 2024 - 6 May 2024)</li>
                 <li class="font-li">Ujian Akhir Semester (22 April 2024 - 6 May 2024)</li>

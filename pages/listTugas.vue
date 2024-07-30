@@ -1,19 +1,19 @@
 <template>
   <Loading v-if="loading"></Loading>
-  <div class="ms-4 pb-2">
-    <h1>Tugas untuk Semua Kursus</h1>
+  <div class="ms-4">
+    <h1 class="font-color-purple">DAFTAR TUGAS</h1>
   </div>
   <div>
     <v-row class="py-2">
       <v-col cols="auto" class="d-flex">
-        <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" to="" @click="selectedBtn = 'going'">Sedang Berjalan</v-btn>
-        <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" to="" @click="selectedBtn = 'late'">Terlambat</v-btn>
+        <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" @click="selectedBtn = 'going'">Sedang Berjalan</v-btn>
+        <v-btn class="button pa-2 mr-2 ml-2" rounded="lg" @click="selectedBtn = 'late'">Terlambat</v-btn>
       </v-col>
     </v-row>
   </div>
-  <div class="ms-2 mr-4 mb- ma-2" v-if="daftarTugas != 0 && filteredTugas.length > 0">
+  <div class="ms-2 mr-4 mb-2 ma-2"  v-if="selectedBtn == 'going'">
     <v-sheet v-for="(tugas, index) in filteredTugas" :key="index" :max-height="expandedPanels[index] ? 'auto' : 'auto'"
-      elevation="2" rounded v-if="selectedBtn == 'going'" class="mb-6">
+      elevation="2" rounded v-if="daftarTugas != 0 && filteredTugas.length > 0" class="mb-6">
       <v-row>
         <v-col cols="10">
           <div class="pl-2">
@@ -35,9 +35,7 @@
         </div>
       </v-row>
     </v-sheet>
-  </div>
-  <div v-else>
-    <v-sheet>
+    <v-sheet v-else>
       <div class="ms-3 pt-3 pb-3">
         <p>Tidak ada tugas tersedia</p>
       </div>
@@ -46,7 +44,7 @@
 
   <div v-if="selectedBtn === 'late'" class="ms-2 mr-2 mb-6" >
     <v-sheet v-if="lateAssignments.length > 0" v-for="(tugasTerlambat, index) in lateAssignments" :key="index" :max-height="expandedPanels[index] ? 'auto' : 'auto'"
-      elevation="2" rounded >
+      elevation="2" rounded class="mb-4" >
       <v-row >
         <v-col cols="10">
           <div class="pl-2">
@@ -68,7 +66,7 @@
         </div>
       </v-row>
     </v-sheet>
-    <v-sheet v-else style="background-color: var(--grey); min-height: 50px; width: 100%;" rounded>
+    <v-sheet v-else style="min-height: 50px; width: 100%;" rounded>
       <div class="ms-2 pt-2">
         <p>Tidak ada tugas terlambat</p>
       </div>
@@ -88,15 +86,12 @@ watch($viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
 });
 const selectedBtn = ref('going');
 
-const loading = ref(true);
-
 const token = useCookie('token');
 const { data: tugas } = await useFetch('/api/daftartugas', {
   headers: {
     'Authorization': `Bearer ${token.value}`
   }
 });
-loading.value=false;
 const daftarTugas = ref(tugas.value);
 const now = new Date();
 const filteredTugas = ref(daftarTugas.value.filter(tugas => new Date(tugas.dateEnd) >= now));

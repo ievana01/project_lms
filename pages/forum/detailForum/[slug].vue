@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <div v-for="(reply, index) in forum.dataReply" :key="index" class="ms-4 mr-4 mb-2 bg-white" rounded>
+                <div v-for="(reply, index) in forum.dataReply" :key="index" class="ms-8 mr-4 mb-2 bg-white" rounded>
                     <div class="ms-2 mr-2">
                         <p style="color: blue">{{ reply.studentName }}</p>
                         <p>{{ reply.content }}</p>

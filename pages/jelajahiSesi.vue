@@ -1,7 +1,7 @@
 <template>
   <div class="ms-2 mr-2">
     <h1 style="color: var(--purple);">JELAJAHI SESI</h1>
-    <v-table bordered>
+    <v-table bordered style="min-height: 300px;">
       <thead>
         <tr>
           <th class="text-left" style="font-weight: bold;">Masuk</th>
@@ -16,7 +16,6 @@
       </tbody>
     </v-table>
   </div>
-
 </template>
 
 <script setup>

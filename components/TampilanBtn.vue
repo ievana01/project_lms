@@ -1,7 +1,7 @@
 <template>
   <div class="kursus pt-4">
     <div class="pt-4">
-      <h6 class="ms-2">Kursus Saya</h6>
+      <h6 class="ms-4">Kursus Saya</h6>
     </div>
 
     <div class="ml-auto mr-2">

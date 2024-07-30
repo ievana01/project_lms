@@ -30,10 +30,7 @@ const { data: profile } = await useFetch('/api/profile', {
 const profileApi = profile.value;
 
 const newPassword = ref('');
-const phoneNumber = ref('');
-const description = ref('');
 const router = useRouter();
-
 
 const updateProfile = async () => {
   try {
